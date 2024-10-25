@@ -10,10 +10,7 @@ const register = async (userData) => {
   formData.append('email', userData.email);
   formData.append('password', userData.password);
   formData.append('contacto', userData.contacto);
-  if (userData.foto) {
-    formData.append('foto', userData.foto);
-  }
-
+  
   return await axios.post(`${API_URL}/register`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

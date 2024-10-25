@@ -10,7 +10,6 @@ const RegisterForm = () => {
     email: '',
     password: '',
     contacto: '',
-    foto: '',
   });
 
   const [error, setError] = useState('');
@@ -85,12 +84,6 @@ const RegisterForm = () => {
           className="w-full mb-4 p-2 text-gray-900 rounded"
           value={formData.contacto}
           onChange={handleChange}
-        />
-        <input
-          type="file"
-          name="foto"
-          className="w-full mb-4 text-white"
-          onChange={(e) => setFormData({ ...formData, foto: e.target.files[0] })}
         />
         <button
           type="submit"
