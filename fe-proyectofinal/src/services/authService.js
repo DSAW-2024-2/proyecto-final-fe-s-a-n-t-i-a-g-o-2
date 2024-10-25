@@ -2,6 +2,11 @@
 import { auth, db } from './firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import axios from 'axios';
+
+const API_URL = 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app';
+
+
 
 const register = async (userData) => {
   const { email, password, nombre, apellido, universidadID, contacto } = userData;
@@ -29,7 +34,16 @@ const register = async (userData) => {
 };
 
 const login = async (email, password) => {
-  return await createUserWithEmailAndPassword(auth, email, password);
-};
+    try {
+      const response = await axios.post(`${API_URL}/login`, { email, password }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      return response.data; // Devuelve los datos del usuario o el token
+    } catch (error) {
+      console.error('Error en el inicio de sesión:', error);
+      throw error;
+    }
+  };
+  
 
 export default { register, login };
