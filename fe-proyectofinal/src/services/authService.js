@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app';
 
 const register = async (userData) => {
   const formData = new FormData();
