@@ -12,7 +12,7 @@ const register = async (userData) => {
     const user = userCredential.user;
 
     // Guardar datos adicionales del usuario en Firestore
-    await setDoc(doc(db, 'usuarios', user.uid), {
+    await setDoc(doc(db, 'conductores', user.uid), {
       nombre,
       apellido,
       universidadID,
