@@ -1,23 +1,35 @@
-import axios from 'axios';
-
-const API_URL = 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app';
+// src/services/authService.js
+import { auth, db } from './firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 const register = async (userData) => {
-  const formData = new FormData();
-  formData.append('nombre', userData.nombre);
-  formData.append('apellido', userData.apellido);
-  formData.append('universidadID', userData.universidadID);
-  formData.append('email', userData.email);
-  formData.append('password', userData.password);
-  formData.append('contacto', userData.contacto);
-  
-  return await axios.post(`${API_URL}/register`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const { email, password, nombre, apellido, universidadID, contacto } = userData;
+
+  try {
+    // Crear un nuevo usuario en Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Guardar datos adicionales del usuario en Firestore
+    await setDoc(doc(db, 'usuarios', user.uid), {
+      nombre,
+      apellido,
+      universidadID,
+      contacto,
+      correoCorporativo: email,
+      uid: user.uid,
+    });
+
+    return user;
+  } catch (error) {
+    console.error('Error al registrar:', error);
+    throw error;
+  }
 };
 
 const login = async (email, password) => {
-  return await axios.post(`${API_URL}/login`, { email, password });
+  return await createUserWithEmailAndPassword(auth, email, password);
 };
 
 export default { register, login };
