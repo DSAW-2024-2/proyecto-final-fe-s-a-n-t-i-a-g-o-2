@@ -19,4 +19,8 @@ const register = async (userData) => {
   });
 };
 
-export default { register };
+const login = async (email, password) => {
+  return await axios.post(`${API_URL}/login`, { email, password });
+};
+
+export default { register, login };
