@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import api from '../../services/api';
 
 const Register = () => {
-  const [isDriver, setIsDriver] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     lastname: '',
@@ -11,59 +10,26 @@ const Register = () => {
     email: '',
     contact: '',
     password: '',
-    // Campos adicionales para conductores
-    vehiclePhoto: null,
-    licensePlate: '',
-    capacity: '',
-    soatPhoto: null,
-    brand: '',
-    model: '',
+    photo: '',
+    // Campos adicionales relacionados con el vehículo
+    placa: '',
+    soat: '',
+    carro: '',
+    capacidad: '',
+    marca: '',
+    modelo: '',
   });
 
-  const handleRoleChange = (role) => {
-    setIsDriver(role === 'driver');
-  };
-
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      // Manejar archivos
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = new FormData();
-
-      // Campos comunes
-      data.append('name', formData.name);
-      data.append('lastname', formData.lastname);
-      data.append('iduni', formData.iduni);
-      data.append('email', formData.email);
-      data.append('contact', formData.contact);
-      data.append('password', formData.password);
-
-      if (isDriver) {
-        // Campos adicionales para conductores
-        data.append('vehiclePhoto', formData.vehiclePhoto);
-        data.append('licensePlate', formData.licensePlate);
-        data.append('capacity', formData.capacity);
-        data.append('soatPhoto', formData.soatPhoto);
-        data.append('brand', formData.brand);
-        data.append('model', formData.model);
-      }
-
-      // Realizar la petición al backend
-      const endpoint = isDriver ? '/users/register' : '/passengers/register';
-      await api.post(endpoint, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // Enviar los datos al backend
+      await api.post('/users/register', formData);
 
       alert('Registro exitoso. Ahora puedes iniciar sesión.');
     } catch (error) {
@@ -75,27 +41,9 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white p-8 rounded shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Registro</h2>
-        <div className="flex justify-center mb-6">
-          <button
-            onClick={() => handleRoleChange('passenger')}
-            className={`mr-2 px-4 py-2 rounded ${
-              !isDriver ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Pasajero
-          </button>
-          <button
-            onClick={() => handleRoleChange('driver')}
-            className={`px-4 py-2 rounded ${
-              isDriver ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            Conductor
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          {/* Campos comunes */}
+        <h2 className="text-2xl font-bold mb-6 text-center">Registro de Conductor</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Campos requeridos por el backend */}
           <div className="mb-4">
             <label className="block text-gray-700">Nombre</label>
             <input
@@ -107,6 +55,7 @@ const Register = () => {
               className="w-full p-2 border rounded"
             />
           </div>
+          {/* Otros campos como 'lastname', 'iduni', 'email', etc. */}
           <div className="mb-4">
             <label className="block text-gray-700">Apellido</label>
             <input
@@ -162,79 +111,92 @@ const Register = () => {
               className="w-full p-2 border rounded"
             />
           </div>
+          {/* Campo 'photo' */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Foto de Perfil (URL)</label>
+            <input
+              type="text"
+              name="photo"
+              value={formData.photo}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+              placeholder="Ingresa la URL de tu foto de perfil"
+            />
+          </div>
 
-          {/* Si es conductor, mostrar campos adicionales */}
-          {isDriver && (
-            <>
-              <hr className="my-6" />
-              <h3 className="text-xl font-bold mb-4">Información del Vehículo</h3>
-              <div className="mb-4">
-                <label className="block text-gray-700">Foto del Vehículo</label>
-                <input
-                  type="file"
-                  name="vehiclePhoto"
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-2 border rounded bg-white"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Placa del Vehículo</label>
-                <input
-                  type="text"
-                  name="licensePlate"
-                  value={formData.licensePlate}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Marca</label>
-                <input
-                  type="text"
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Modelo</label>
-                <input
-                  type="text"
-                  name="model"
-                  value={formData.model}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Capacidad del Vehículo</label>
-                <input
-                  type="number"
-                  name="capacity"
-                  value={formData.capacity}
-                  onChange={handleInputChange}
-                  required
-                  min="1"
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-700">Foto del SOAT</label>
-                <input
-                  type="file"
-                  name="soatPhoto"
-                  onChange={handleInputChange}
-                  required
-                  className="w-full p-2 border rounded bg-white"
-                />
-              </div>
-            </>
-          )}
+          {/* Información del Vehículo */}
+          <hr className="my-6" />
+          <h3 className="text-xl font-bold mb-4">Información del Vehículo</h3>
+          <div className="mb-4">
+            <label className="block text-gray-700">Placa del Vehículo</label>
+            <input
+              type="text"
+              name="placa"
+              value={formData.placa}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Marca</label>
+            <input
+              type="text"
+              name="marca"
+              value={formData.marca}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Modelo</label>
+            <input
+              type="text"
+              name="modelo"
+              value={formData.modelo}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Capacidad del Vehículo</label>
+            <input
+              type="number"
+              name="capacidad"
+              value={formData.capacidad}
+              onChange={handleInputChange}
+              required
+              min="1"
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          {/* Campos adicionales como 'soat' y 'carro' */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Foto del SOAT (URL)</label>
+            <input
+              type="text"
+              name="soat"
+              value={formData.soat}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+              placeholder="Ingresa la URL de la foto del SOAT"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Tipo de Vehículo</label>
+            <input
+              type="text"
+              name="carro"
+              value={formData.carro}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+              placeholder="Ejemplo: Sedán, SUV, etc."
+            />
+          </div>
+
           <button
             type="submit"
             className="w-full bg-green-500 text-white py-2 rounded mt-4 hover:bg-green-600"
