@@ -4,21 +4,15 @@ import Header from '../Header';
 import TripCard from './TripCard';
 import Filters from './Filters';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const MainMenu = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  // Suponiendo que tienes una lista de viajes disponibles
+  // Supongamos que tienes una lista de viajes disponibles
   const trips = [
-    {
-      route: 'Calle 100 - U. Sabana',
-      driverName: 'Camila López',
-      routeType: 'Autopista',
-      availableSeats: 1,
-      departureTime: '7:00 AM',
-      fare: '$6,000',
-    },
-    // ... más viajes
+    // ... tus datos de prueba o datos obtenidos del backend
   ];
 
   return (
@@ -26,6 +20,14 @@ const MainMenu = () => {
       <Header />
       <div className="container mx-auto p-4">
         <h2 className="text-xl mb-4">Bienvenido, {user.name}</h2>
+        {user.role === 'driver' && (
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
+            onClick={() => navigate('/new-trip')}
+          >
+            Crear Nuevo Viaje
+          </button>
+        )}
         <Filters />
         <h3 className="text-lg mt-6 mb-4">Viajes Disponibles</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

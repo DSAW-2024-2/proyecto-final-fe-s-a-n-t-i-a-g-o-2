@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import MainMenuPage from './pages/MainMenuPage';
 import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
+import NewTripPage from './pages/NewTripPage'; // Importamos la nueva página
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -42,6 +43,14 @@ function App() {
             element={
               <PrivateRoute>
                 <EditProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/new-trip"
+            element={
+              <PrivateRoute>
+                <NewTripPage />
               </PrivateRoute>
             }
           />

@@ -1,8 +1,10 @@
 // src/components/Auth/Register.jsx
 import React, { useState } from 'react';
 import api from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     lastname: '',
@@ -31,7 +33,8 @@ const Register = () => {
       // Enviar los datos al backend
       await api.post('/users/register', formData);
 
-      alert('Registro exitoso. Ahora puedes iniciar sesión.');
+      // Redirigir al menú principal
+      navigate('/main-menu');
     } catch (error) {
       console.error('Error al registrar:', error);
       alert('Error al registrar. Por favor, intenta de nuevo.');
@@ -55,7 +58,6 @@ const Register = () => {
               className="w-full p-2 border rounded"
             />
           </div>
-          {/* Otros campos como 'lastname', 'iduni', 'email', etc. */}
           <div className="mb-4">
             <label className="block text-gray-700">Apellido</label>
             <input
