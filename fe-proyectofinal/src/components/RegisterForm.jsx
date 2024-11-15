@@ -32,11 +32,13 @@ const RegisterForm = () => {
       return;
     }
 
+    // Crear un objeto nuevo sin el campo `foto`
+    const userData = { nombre, apellido, universidadID, email, password, contacto };
+
     try {
-      const user = await authService.register(formData);
+      const user = await authService.register(userData);
       setSuccess('Registro exitoso');
       setError('');
-      // Redirige al menú principal inmediatamente con los datos del usuario
       navigate('/main', { state: { user } });
     } catch (err) {
       setError(err.response?.data?.error || 'Error en el registro');
