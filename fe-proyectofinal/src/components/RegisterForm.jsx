@@ -13,7 +13,6 @@ const RegisterForm = () => {
   });
 
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,27 +21,11 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validación para asegurarse de que todos los campos estén completos
-    const { nombre, apellido, universidadID, email, password, contacto } = formData;
-
-    if (!nombre || !apellido || !universidadID || !email || !password || !contacto) {
-      setError('Por favor, completa todos los campos');
-      setSuccess('');
-      return;
-    }
-
-    // Crear un objeto nuevo sin el campo `foto`
-    const userData = { nombre, apellido, universidadID, email, password, contacto };
-
     try {
-      const user = await authService.register(userData);
-      setSuccess('Registro exitoso');
-      setError('');
-      navigate('/main', { state: { user } });
+      await authService.register(formData);
+      navigate('/login'); // Redirigir después del registro exitoso
     } catch (err) {
-      setError(err.response?.data?.error || 'Error en el registro');
-      setSuccess('');
+      setError(err.response.data.error);
     }
   };
 
@@ -54,7 +37,6 @@ const RegisterForm = () => {
       >
         <h2 className="text-3xl font-bold mb-4 text-white text-center">Regístrate</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-500 mb-4">{success}</p>}
         <input
           type="text"
           name="nombre"

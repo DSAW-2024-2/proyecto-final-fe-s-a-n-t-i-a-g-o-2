@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
 
 const AuthPage = () => {
@@ -13,7 +12,6 @@ const AuthPage = () => {
     contacto: '',
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,25 +21,13 @@ const AuthPage = () => {
     e.preventDefault();
     try {
       if (isLogin) {
-        // Proceso de inicio de sesión
         await authService.login(formData.email, formData.password);
-        navigate('/main'); // Redirigir después del inicio de sesión exitoso
       } else {
-        // Proceso de registro
-        const userData = {
-          nombre: formData.nombre,
-          apellido: formData.apellido,
-          universidadID: formData.universidadID,
-          email: formData.email,
-          password: formData.password,
-          contacto: formData.contacto,
-        };
-        await authService.register(userData);
-        navigate('/main'); // Redirigir después del registro exitoso
+        await authService.register(formData);
       }
-      setError('');
+      // Redirigir o manejar post-login/registro
     } catch (err) {
-      setError(err.response?.data?.error || 'Ocurrió un error');
+      setError(err.response.data.error);
     }
   };
 
