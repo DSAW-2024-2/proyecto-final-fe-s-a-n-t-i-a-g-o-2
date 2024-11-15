@@ -20,8 +20,8 @@ const Register = () => {
     model: '',
   });
 
-  const handleRoleChange = () => {
-    setIsDriver(!isDriver);
+  const handleRoleChange = (role) => {
+    setIsDriver(role === 'driver');
   };
 
   const handleInputChange = (e) => {
@@ -73,43 +73,176 @@ const Register = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Registro</h2>
-      <button
-        onClick={handleRoleChange}
-        className="mb-4 bg-green-500 text-white px-4 py-2 rounded"
-      >
-        Registrarse como {isDriver ? 'Pasajero' : 'Conductor'}
-      </button>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        {/* Campos comunes */}
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={formData.name}
-          onChange={handleInputChange}
-          required
-          className="block w-full mb-2 p-2 border"
-        />
-        {/* ... otros campos comunes */}
-        {/* Si es conductor, mostrar campos adicionales */}
-        {isDriver && (
-          <>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white p-8 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Registro</h2>
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => handleRoleChange('passenger')}
+            className={`mr-2 px-4 py-2 rounded ${
+              !isDriver ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            }`}
+          >
+            Pasajero
+          </button>
+          <button
+            onClick={() => handleRoleChange('driver')}
+            className={`px-4 py-2 rounded ${
+              isDriver ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            }`}
+          >
+            Conductor
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          {/* Campos comunes */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Nombre</label>
             <input
-              type="file"
-              name="vehiclePhoto"
+              type="text"
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
               required
-              className="block w-full mb-2"
+              className="w-full p-2 border rounded"
             />
-            {/* ... otros campos para conductores */}
-          </>
-        )}
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Registrarse
-        </button>
-      </form>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Apellido</label>
+            <input
+              type="text"
+              name="lastname"
+              value={formData.lastname}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">ID Universidad</label>
+            <input
+              type="text"
+              name="iduni"
+              value={formData.iduni}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Número de Contacto</label>
+            <input
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+
+          {/* Si es conductor, mostrar campos adicionales */}
+          {isDriver && (
+            <>
+              <hr className="my-6" />
+              <h3 className="text-xl font-bold mb-4">Información del Vehículo</h3>
+              <div className="mb-4">
+                <label className="block text-gray-700">Foto del Vehículo</label>
+                <input
+                  type="file"
+                  name="vehiclePhoto"
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-2 border rounded bg-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Placa del Vehículo</label>
+                <input
+                  type="text"
+                  name="licensePlate"
+                  value={formData.licensePlate}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Marca</label>
+                <input
+                  type="text"
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Modelo</label>
+                <input
+                  type="text"
+                  name="model"
+                  value={formData.model}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Capacidad del Vehículo</label>
+                <input
+                  type="number"
+                  name="capacity"
+                  value={formData.capacity}
+                  onChange={handleInputChange}
+                  required
+                  min="1"
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700">Foto del SOAT</label>
+                <input
+                  type="file"
+                  name="soatPhoto"
+                  onChange={handleInputChange}
+                  required
+                  className="w-full p-2 border rounded bg-white"
+                />
+              </div>
+            </>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-green-500 text-white py-2 rounded mt-4 hover:bg-green-600"
+          >
+            Registrarse
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
