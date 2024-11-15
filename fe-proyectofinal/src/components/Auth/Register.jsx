@@ -30,8 +30,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Añadir el campo 'role' al formData
+      const dataToSend = { ...formData, role: 'driver' };
+
       // Enviar los datos al backend
-      await api.post('/users/register', formData);
+      await api.post('/users/register', dataToSend);
 
       // Redirigir al menú principal
       navigate('/main-menu');

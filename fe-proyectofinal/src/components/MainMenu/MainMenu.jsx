@@ -10,6 +10,13 @@ const MainMenu = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  if (!user) {
+    return <div>Cargando...</div>;
+  }
+
+  // Imprimir el objeto user para depuración
+  console.log('Usuario:', user);
+
   // Supongamos que tienes una lista de viajes disponibles
   const trips = [
     // ... tus datos de prueba o datos obtenidos del backend
