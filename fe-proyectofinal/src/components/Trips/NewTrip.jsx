@@ -1,9 +1,8 @@
-// src/components/Trips/NewTrip.jsx
 import React, { useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../Footer'; // Asegúrate de importar Footer correctamente
+import Footer from '../Footer';
 
 const NewTrip = () => {
   const { user } = useContext(AuthContext);
@@ -14,25 +13,17 @@ const NewTrip = () => {
     end: '',
     route: '',
     departure: '',
-    price: '',
-    availableSeats: 1, // Añade este campo si el backend lo espera
+    price: ''
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Si el campo es 'availableSeats', convertir a número
-    if (name === 'availableSeats') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Asegúrate de que la ruta coincide con la esperada por el backend
       const response = await api.post('/api/trips', formData);
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
@@ -88,9 +79,9 @@ const NewTrip = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Hora de Salida</label>
+            <label className="block mb-1">Fecha y Hora de Salida</label>
             <input
-              type="time"
+              type="datetime-local" // Cambiado a datetime-local
               name="departure"
               value={formData.departure}
               onChange={handleInputChange}
@@ -110,19 +101,6 @@ const NewTrip = () => {
               step="0.01"
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
               placeholder="Ejemplo: 15.50"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Asientos Disponibles</label>
-            <input
-              type="number"
-              name="availableSeats"
-              value={formData.availableSeats}
-              onChange={handleInputChange}
-              required
-              min="1"
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ejemplo: 3"
             />
           </div>
           <div className="flex mt-6">
