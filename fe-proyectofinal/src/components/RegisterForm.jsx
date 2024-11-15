@@ -23,11 +23,33 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación para asegurarse de que todos los campos estén completos
+    // Validación adicional y depuración
     const { nombre, apellido, universidadID, email, password, contacto } = formData;
-    if (!nombre || !apellido || !universidadID || !email || !password || !contacto) {
-      setError('Por favor, completa todos los campos');
-      setSuccess('');
+
+    console.log("Valores del formulario:", formData); // Depuración para ver el contenido de formData
+
+    if (!nombre) {
+      setError('Por favor, completa el campo de Nombre');
+      return;
+    }
+    if (!apellido) {
+      setError('Por favor, completa el campo de Apellido');
+      return;
+    }
+    if (!universidadID) {
+      setError('Por favor, completa el campo de ID Universidad');
+      return;
+    }
+    if (!email) {
+      setError('Por favor, completa el campo de Correo institucional');
+      return;
+    }
+    if (!password) {
+      setError('Por favor, completa el campo de Contraseña');
+      return;
+    }
+    if (!contacto) {
+      setError('Por favor, completa el campo de Número de contacto');
       return;
     }
 
@@ -35,7 +57,6 @@ const RegisterForm = () => {
       const user = await authService.register(formData);
       setSuccess('Registro exitoso');
       setError('');
-      // Redirige al menú principal inmediatamente con los datos del usuario
       navigate('/main', { state: { user } });
     } catch (err) {
       setError(err.response?.data?.error || 'Error en el registro');
@@ -51,6 +72,7 @@ const RegisterForm = () => {
       >
         <h2 className="text-3xl font-bold mb-4 text-white text-center">Regístrate</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
+        {success && <p className="text-green-500 mb-4">{success}</p>}
         <input
           type="text"
           name="nombre"
