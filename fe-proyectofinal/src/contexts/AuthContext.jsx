@@ -21,17 +21,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/users/login', { email, password });
-      const { token, uid } = response.data;
+      const { token, user } = response.data;
 
-      // Obtener los datos completos del usuario
-      const userResponse = await api.get(`/users/${uid}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const userData = userResponse.data.user;
-
-      localStorage.setItem('user', JSON.stringify({ ...userData, token }));
-      setUser({ ...userData, token });
+      // Almacenar el usuario y el token
+      localStorage.setItem('user', JSON.stringify({ ...user, token }));
+      setUser({ ...user, token });
 
       // Establecer el token en los headers de las futuras solicitudes
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
