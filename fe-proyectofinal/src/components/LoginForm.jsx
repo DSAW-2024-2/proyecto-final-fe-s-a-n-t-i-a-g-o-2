@@ -5,7 +5,7 @@ import authService from '../services/authService';
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(''); // Estado para el mensaje de éxito
+  const [success, setSuccess] = useState(''); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,15 +15,15 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await authService.login(formData.email, formData.password);
-      setSuccess('Inicio de sesión exitoso');  // Mostrar el mensaje de éxito
-      setError('');  // Limpiar cualquier mensaje de error
+      const response = await authService.login(formData.email, formData.password);
+      setSuccess('Inicio de sesión exitoso'); 
+      setError('');
       setTimeout(() => {
-        navigate('/dashboard');  // Redirigir después de 2 segundos
+        navigate('/main', { state: { user: response.user } }); // Redirige al menú principal con los datos del usuario
       }, 2000);
     } catch (err) {
-      setError(err.response.data.error);  // Mostrar el mensaje de error
-      setSuccess('');  // Limpiar el mensaje de éxito
+      setError(err.response?.data?.error || 'Error en el inicio de sesión');
+      setSuccess('');
     }
   };
 

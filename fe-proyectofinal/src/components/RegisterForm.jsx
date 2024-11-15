@@ -13,6 +13,7 @@ const RegisterForm = () => {
   });
 
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,10 +23,15 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await authService.register(formData);
-      navigate('/login'); // Redirigir después del registro exitoso
+      const response = await authService.register(formData);
+      setSuccess('Registro exitoso');
+      setError('');
+      setTimeout(() => {
+        navigate('/main', { state: { user: response.user } }); // Redirige al menú principal con los datos del usuario
+      }, 2000);
     } catch (err) {
-      setError(err.response.data.error);
+      setError(err.response?.data?.error || 'Error en el registro');
+      setSuccess('');
     }
   };
 
