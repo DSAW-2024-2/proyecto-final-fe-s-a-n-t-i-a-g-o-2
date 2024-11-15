@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer';
 
 const NewTrip = () => {
   const { user } = useContext(AuthContext);
