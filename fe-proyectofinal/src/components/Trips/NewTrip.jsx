@@ -24,7 +24,7 @@ const NewTrip = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/api/trips', formData);
+      const response = await api.post('/api/newtrip', formData);
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
