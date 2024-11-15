@@ -1,4 +1,4 @@
-// src/components/Trips/NewTrip.jsx
+// frontend/src/components/Trips/NewTrip.jsx
 import React, { useState, useContext } from 'react';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -32,7 +32,7 @@ const NewTrip = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Asegúrate de que la ruta coincide con la esperada por el backend
+      // Ruta ajustada para coincidir con el backend
       const response = await api.post('/trips/newtrip', formData);
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
