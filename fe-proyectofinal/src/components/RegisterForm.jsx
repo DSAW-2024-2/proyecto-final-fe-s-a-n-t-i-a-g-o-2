@@ -22,13 +22,21 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validación para asegurarse de que todos los campos estén completos
+    const { nombre, apellido, universidadID, email, password, contacto } = formData;
+    if (!nombre || !apellido || !universidadID || !email || !password || !contacto) {
+      setError('Por favor, completa todos los campos');
+      setSuccess('');
+      return;
+    }
+
     try {
-      const response = await authService.register(formData);
+      const user = await authService.register(formData);
       setSuccess('Registro exitoso');
       setError('');
-      setTimeout(() => {
-        navigate('/main', { state: { user: response.user } }); // Redirige al menú principal con los datos del usuario
-      }, 2000);
+      // Redirige al menú principal inmediatamente con los datos del usuario
+      navigate('/main', { state: { user } });
     } catch (err) {
       setError(err.response?.data?.error || 'Error en el registro');
       setSuccess('');
