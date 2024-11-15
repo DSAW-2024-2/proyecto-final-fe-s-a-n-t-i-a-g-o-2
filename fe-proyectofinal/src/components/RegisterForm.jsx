@@ -23,33 +23,12 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación adicional y depuración
+    // Validación para asegurarse de que todos los campos estén completos
     const { nombre, apellido, universidadID, email, password, contacto } = formData;
 
-    console.log("Valores del formulario:", formData); // Depuración para ver el contenido de formData
-
-    if (!nombre) {
-      setError('Por favor, completa el campo de Nombre');
-      return;
-    }
-    if (!apellido) {
-      setError('Por favor, completa el campo de Apellido');
-      return;
-    }
-    if (!universidadID) {
-      setError('Por favor, completa el campo de ID Universidad');
-      return;
-    }
-    if (!email) {
-      setError('Por favor, completa el campo de Correo institucional');
-      return;
-    }
-    if (!password) {
-      setError('Por favor, completa el campo de Contraseña');
-      return;
-    }
-    if (!contacto) {
-      setError('Por favor, completa el campo de Número de contacto');
+    if (!nombre || !apellido || !universidadID || !email || !password || !contacto) {
+      setError('Por favor, completa todos los campos');
+      setSuccess('');
       return;
     }
 
@@ -57,6 +36,7 @@ const RegisterForm = () => {
       const user = await authService.register(formData);
       setSuccess('Registro exitoso');
       setError('');
+      // Redirige al menú principal inmediatamente con los datos del usuario
       navigate('/main', { state: { user } });
     } catch (err) {
       setError(err.response?.data?.error || 'Error en el registro');

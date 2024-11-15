@@ -2,12 +2,12 @@ import axios from 'axios';
 
 const API_URL = 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app';
 
-// Registro de usuario (sin encabezado de autorización)
+// Registro de usuario (sin ningún encabezado de autorización)
 const register = async (userData) => {
   try {
-    console.log("Datos enviados al backend:", userData); // Depuración de datos enviados al backend
+    console.log("Datos enviados al backend (registro):", userData); // Depuración de datos enviados al backend
     const response = await axios.post(`${API_URL}/users/register`, userData, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }, // Solo enviamos Content-Type
     });
     const user = response.data.user;
     return user; // Retorna los datos del usuario registrado
@@ -21,7 +21,7 @@ const register = async (userData) => {
   }
 };
 
-// Inicio de sesión (agrega el token al localStorage)
+// Inicio de sesión (para solicitudes autenticadas)
 const login = async (email, password) => {
   try {
     const response = await axios.post(`${API_URL}/users/login`, { correo: email, contraseña: password }, {
@@ -42,10 +42,4 @@ const logout = () => {
   localStorage.removeItem('token');
 };
 
-// Función auxiliar para configurar solicitudes autenticadas
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
-export default { register, login, logout, getAuthHeaders };
+export default { register, login, logout };
