@@ -75,12 +75,12 @@ const EditProfile = () => {
   };
 
   if (!user) {
-    return <div>Cargando...</div>;
+    return <div className="text-center mt-10">Cargando...</div>;
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
-      <div className="container mx-auto p-6">
+    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+      <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6">Editar Perfil</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
           {/* Datos personales */}
@@ -93,6 +93,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa tu nombre"
             />
           </div>
           <div className="mb-4">
@@ -104,6 +105,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa tu apellido"
             />
           </div>
           {/* Otros campos personales */}
@@ -116,6 +118,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa tu ID Universitario"
             />
           </div>
           <div className="mb-4">
@@ -127,6 +130,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               disabled
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white cursor-not-allowed"
+              placeholder="ejemplo@correo.com"
             />
             <p className="text-sm text-gray-400">No puedes cambiar tu correo electrónico.</p>
           </div>
@@ -139,6 +143,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa tu número de contacto"
             />
           </div>
           {/* Campo 'photo' */}
@@ -154,7 +159,7 @@ const EditProfile = () => {
             />
           </div>
 
-          {/* Información del vehículo */}
+          {/* Información del Vehículo */}
           <hr className="my-6 border-gray-600" />
           <h3 className="text-xl font-bold mb-4">Información del Vehículo</h3>
           <div className="mb-4">
@@ -165,6 +170,7 @@ const EditProfile = () => {
               value={formData.placa}
               onChange={handleInputChange}
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa la placa de tu vehículo"
             />
           </div>
           <div className="mb-4">
@@ -175,6 +181,7 @@ const EditProfile = () => {
               value={formData.marca}
               onChange={handleInputChange}
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa la marca de tu vehículo"
             />
           </div>
           <div className="mb-4">
@@ -185,6 +192,7 @@ const EditProfile = () => {
               value={formData.modelo}
               onChange={handleInputChange}
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa el modelo de tu vehículo"
             />
           </div>
           <div className="mb-4">
@@ -196,6 +204,7 @@ const EditProfile = () => {
               onChange={handleInputChange}
               min="1"
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              placeholder="Ingresa la capacidad de tu vehículo"
             />
           </div>
           {/* Campos adicionales como 'soat' y 'carro' */}

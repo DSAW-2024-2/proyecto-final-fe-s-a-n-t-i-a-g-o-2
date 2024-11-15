@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <header className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <Link to="/main-menu" className="text-2xl font-bold">Despinchados</Link>
+      <Link to="/main-menu" className="text-2xl font-bold">Deskpinchados</Link>
       <nav>
         <Link to="/profile" className="mr-4">Mi Perfil</Link>
         <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">Logout</button>
