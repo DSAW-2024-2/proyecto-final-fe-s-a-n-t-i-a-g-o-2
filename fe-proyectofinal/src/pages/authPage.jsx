@@ -90,12 +90,6 @@ const AuthPage = () => {
                 value={formData.contacto}
                 onChange={handleChange}
               />
-              <input
-                type="file"
-                name="foto"
-                className="w-full mb-4 text-white"
-                onChange={(e) => setFormData({ ...formData, foto: e.target.files[0] })}
-              />
             </>
           )}
 
