@@ -27,14 +27,13 @@ const MainMenu = () => {
       <Header />
       <div className="container mx-auto p-4">
         <h2 className="text-xl mb-4">Bienvenido, {user.name}</h2>
-        {user.role === 'driver' && (
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
-            onClick={() => navigate('/new-trip')}
-          >
-            Crear Nuevo Viaje
-          </button>
-        )}
+        {/* Mostramos el botón sin verificar el rol */}
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
+          onClick={() => navigate('/new-trip')}
+        >
+          Crear Nuevo Viaje
+        </button>
         <Filters />
         <h3 className="text-lg mt-6 mb-4">Viajes Disponibles</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

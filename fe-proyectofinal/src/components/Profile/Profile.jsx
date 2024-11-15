@@ -37,31 +37,27 @@ const Profile = () => {
             <strong>Foto de Perfil:</strong>{' '}
             {user.photo ? <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32" /> : 'No disponible'}
           </p>
-          {/* Información del vehículo si es conductor */}
-          {user.placa && (
-            <>
-              <h3 className="text-xl font-bold mt-6 mb-4">Información del Vehículo</h3>
-              <p className="mb-2">
-                <strong>Placa:</strong> {user.placa}
-              </p>
-              <p className="mb-2">
-                <strong>Marca:</strong> {user.marca}
-              </p>
-              <p className="mb-2">
-                <strong>Modelo:</strong> {user.modelo}
-              </p>
-              <p className="mb-2">
-                <strong>Capacidad:</strong> {user.capacidad}
-              </p>
-              <p className="mb-2">
-                <strong>Tipo de Vehículo:</strong> {user.carro}
-              </p>
-              <p className="mb-2">
-                <strong>Foto del SOAT:</strong>{' '}
-                {user.soat ? <img src={user.soat} alt="Foto del SOAT" className="w-32 h-32" /> : 'No disponible'}
-              </p>
-            </>
-          )}
+          {/* Información del vehículo */}
+          <h3 className="text-xl font-bold mt-6 mb-4">Información del Vehículo</h3>
+          <p className="mb-2">
+            <strong>Placa:</strong> {user.placa}
+          </p>
+          <p className="mb-2">
+            <strong>Marca:</strong> {user.marca}
+          </p>
+          <p className="mb-2">
+            <strong>Modelo:</strong> {user.modelo}
+          </p>
+          <p className="mb-2">
+            <strong>Capacidad:</strong> {user.capacidad}
+          </p>
+          <p className="mb-2">
+            <strong>Tipo de Vehículo:</strong> {user.carro}
+          </p>
+          <p className="mb-2">
+            <strong>Foto del SOAT:</strong>{' '}
+            {user.soat ? <img src={user.soat} alt="Foto del SOAT" className="w-32 h-32" /> : 'No disponible'}
+          </p>
           <div className="mt-6 flex">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"

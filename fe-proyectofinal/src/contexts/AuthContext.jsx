@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/users/login', { email, password });
-      const { token, uid, role } = response.data;
+      const { token, uid } = response.data;
 
       // Obtener los datos completos del usuario
       const userResponse = await api.get(`/users/${uid}`, {
@@ -29,9 +29,6 @@ export const AuthProvider = ({ children }) => {
       });
 
       const userData = userResponse.data.user;
-
-      // Añadir el rol al objeto 'userData'
-      userData.role = role;
 
       localStorage.setItem('user', JSON.stringify({ ...userData, token }));
       setUser({ ...userData, token });
