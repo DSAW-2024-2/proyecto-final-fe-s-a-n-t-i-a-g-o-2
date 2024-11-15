@@ -16,13 +16,7 @@ const register = async (userData) => {
     console.log("Datos enviados al backend:", userData); // Depuración de datos enviados al backend
     const response = await api.post('/users/register', userData);
     const user = response.data.user;
-    
-    // Guardar el token si está presente en la respuesta
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-    }
-
-    return user;
+    return user; // Retorna los datos del usuario registrado
   } catch (error) {
     console.error('Error en el registro:', error);
     throw error;
@@ -34,6 +28,7 @@ const login = async (email, password) => {
   try {
     const response = await api.post('/users/login', { correo: email, contraseña: password });
     
+    // Guardar el token en localStorage si se proporciona en el inicio de sesión
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
     }
