@@ -9,7 +9,9 @@ import MainMenuPage from './pages/MainMenuPage';
 import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NewTripPage from './pages/NewTripPage';
-import AddVehiclePage from './pages/AddVehiclePage'; // Importar la nueva página
+import AddVehiclePage from './pages/AddVehiclePage';
+import VehicleProfilePage from './pages/VehicleProfilePage'; // Nueva página
+import EditVehiclePage from './pages/EditVehiclePage'; // Nueva página
 import PrivateRoute from './components/PrivateRoute';
 import './styles/index.css';
 
@@ -62,6 +64,22 @@ function App() {
               element={
                 <PrivateRoute>
                   <AddVehiclePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/vehicle"
+              element={
+                <PrivateRoute>
+                  <VehicleProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/edit-vehicle"
+              element={
+                <PrivateRoute>
+                  <EditVehiclePage />
                 </PrivateRoute>
               }
             />
