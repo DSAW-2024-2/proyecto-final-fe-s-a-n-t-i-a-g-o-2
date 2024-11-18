@@ -1,124 +1,60 @@
-// src/components/Profile/Profile.jsx
-import React, { useContext, useEffect, useState } from 'react';
-import Header from '../Header';
-import { AuthContext } from '../../contexts/AuthContext';
+// src/contexts/AuthContext.jsx
+import React, { createContext, useState, useEffect } from 'react';
+import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../Footer';
-import api from '../../services/api';
 
-const Profile = () => {
-  const { user, setUser } = useContext(AuthContext);
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [car, setCar] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Obtener la información actualizada del usuario
-        const response = await api.get(`/users/${user._id}`);
-        setUser({ ...response.data.user, token: user.token }); // Mantener el token
-      } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
-        if (error.response && error.response.status === 401) {
-          alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
-          navigate('/login');
-        }
-      }
-    };
-
-    const fetchCarData = async () => {
-      try {
-        const response = await api.get(`/cars/${user._id}`);
-        setCar(response.data.car);
-      } catch (error) {
-        console.error('Error al obtener el vehículo:', error);
-        // Si el usuario no tiene vehículo, no hacemos nada
-      }
-    };
-
-    if (user) {
-      fetchUserData();
-      fetchCarData();
+    // Obtener el usuario del localStorage al cargar la aplicación
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser && storedUser.token) {
+      setUser(storedUser);
+      api.defaults.headers.common['Authorization'] = `Bearer ${storedUser.token}`;
     }
-  }, [user, setUser, navigate]);
+  }, []);
 
-  if (!user) {
-    return <div className="text-center mt-10">Cargando...</div>;
-  }
+  const login = async (email, password) => {
+    try {
+      const response = await api.post('/users/login', { email, password });
+      console.log('Respuesta del backend:', response.data);
+
+      const { token, user: userData } = response.data;
+
+      // Verificar que el token y el uid están presentes
+      if (!token || !userData || !userData.uid) {
+        throw new Error('Respuesta del servidor inválida. Faltan token o uid.');
+      }
+
+      // Almacenar el usuario con el token y el uid
+      const userWithToken = { ...userData, token };
+      localStorage.setItem('user', JSON.stringify(userWithToken));
+      setUser(userWithToken);
+
+      // Establecer el token en los headers de las futuras solicitudes
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      navigate('/main-menu');
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      alert('Error al iniciar sesión. Verifica tus credenciales.');
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    delete api.defaults.headers.common['Authorization'];
+    navigate('/login');
+  };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
-      <Header />
-      <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Mi Perfil</h2>
-        <div className="bg-gray-800 p-6 rounded shadow-md">
-          <p className="mb-2">
-            <strong>Nombre:</strong> {user.name}
-          </p>
-          <p className="mb-2">
-            <strong>Apellido:</strong> {user.lastname}
-          </p>
-          <p className="mb-2">
-            <strong>Correo Electrónico:</strong> {user.email}
-          </p>
-          <p className="mb-2">
-            <strong>Número de Contacto:</strong> {user.contact}
-          </p>
-          <p className="mb-2">
-            <strong>ID Universidad:</strong> {user.iduni}
-          </p>
-          {user.photo && (
-            <div className="mb-2">
-              <strong>Foto de Perfil:</strong>
-              <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
-            </div>
-          )}
-          {/* Información del Vehículo */}
-          {car && (
-            <>
-              <h3 className="text-xl font-bold mt-6 mb-4">Información del Vehículo</h3>
-              <p className="mb-2">
-                <strong>Placa:</strong> {car.placa}
-              </p>
-              <p className="mb-2">
-                <strong>Marca:</strong> {car.marca}
-              </p>
-              <p className="mb-2">
-                <strong>Modelo:</strong> {car.modelo}
-              </p>
-              <p className="mb-2">
-                <strong>Capacidad:</strong> {car.capacidad}
-              </p>
-              <p className="mb-2">
-                <strong>Tipo de Vehículo:</strong> {car.carro}
-              </p>
-              {car.soat && (
-                <div className="mb-2">
-                  <strong>Foto del SOAT:</strong>
-                  <img src={car.soat} alt="Foto del SOAT" className="w-32 h-32 rounded mt-2" />
-                </div>
-              )}
-            </>
-          )}
-          <div className="mt-6 flex">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"
-              onClick={() => navigate('/edit-profile')}
-            >
-              Editar Perfil
-            </button>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-              onClick={() => navigate('/main-menu')}
-            >
-              Volver al Menú Principal
-            </button>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+    <AuthContext.Provider value={{ user, setUser, isAuthenticated: !!user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
-
-export default Profile;
