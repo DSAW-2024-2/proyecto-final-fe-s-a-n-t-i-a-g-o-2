@@ -59,4 +59,3 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export default Profile;
