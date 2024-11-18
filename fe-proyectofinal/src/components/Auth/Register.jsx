@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,13 +14,6 @@ const Register = () => {
     contact: '',
     password: '',
     photo: '',
-    // Campos adicionales relacionados con el vehículo
-    placa: '',
-    soat: '',
-    carro: '',
-    capacidad: '',
-    marca: '',
-    modelo: '',
   });
 
   const handleInputChange = (e) => {
@@ -30,22 +24,23 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Enviar los datos al backend
       await api.post('/users/register', formData);
-
-      // Redirigir al usuario a la página de inicio de sesión
       alert('Registro exitoso. Ahora puedes iniciar sesión.');
       navigate('/login');
     } catch (error) {
       console.error('Error al registrar:', error);
-      alert('Error al registrar. Por favor, intenta de nuevo.');
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert('Error al registrar. Por favor, intenta de nuevo.');
+      }
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg bg-white p-8 rounded shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Registro de Conductor</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Registro de Pasajero</h2>
         <form onSubmit={handleSubmit}>
           {/* Campos requeridos por el backend */}
           <div className="mb-4">
@@ -57,6 +52,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="Ingresa tu nombre"
             />
           </div>
           <div className="mb-4">
@@ -68,6 +64,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="Ingresa tu apellido"
             />
           </div>
           <div className="mb-4">
@@ -79,6 +76,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="Ingresa tu ID Universidad"
             />
           </div>
           <div className="mb-4">
@@ -90,6 +88,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="ejemplo@correo.com"
             />
           </div>
           <div className="mb-4">
@@ -101,6 +100,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="Ingresa tu número de contacto"
             />
           </div>
           <div className="mb-6">
@@ -112,6 +112,7 @@ const Register = () => {
               onChange={handleInputChange}
               required
               className="w-full p-2 border rounded"
+              placeholder="Ingresa tu contraseña"
             />
           </div>
           {/* Campo 'photo' */}
@@ -127,87 +128,17 @@ const Register = () => {
             />
           </div>
 
-          {/* Información del Vehículo */}
-          <hr className="my-6" />
-          <h3 className="text-xl font-bold mb-4">Información del Vehículo</h3>
-          <div className="mb-4">
-            <label className="block text-gray-700">Placa del Vehículo</label>
-            <input
-              type="text"
-              name="placa"
-              value={formData.placa}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 border rounded"
-            />
+          <div className="flex mt-6">
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+            >
+              Registrarse
+            </button>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Marca</label>
-            <input
-              type="text"
-              name="marca"
-              value={formData.marca}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Modelo</label>
-            <input
-              type="text"
-              name="modelo"
-              value={formData.modelo}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Capacidad del Vehículo</label>
-            <input
-              type="number"
-              name="capacidad"
-              value={formData.capacidad}
-              onChange={handleInputChange}
-              required
-              min="1"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          {/* Campos adicionales como 'soat' y 'carro' */}
-          <div className="mb-4">
-            <label className="block text-gray-700">Foto del SOAT (URL)</label>
-            <input
-              type="text"
-              name="soat"
-              value={formData.soat}
-              onChange={handleInputChange}
-              className="w-full p-2 border rounded"
-              placeholder="Ingresa la URL de la foto del SOAT"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Tipo de Vehículo</label>
-            <input
-              type="text"
-              name="carro"
-              value={formData.carro}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 border rounded"
-              placeholder="Ejemplo: Sedán, SUV, etc."
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded mt-4 hover:bg-green-600"
-          >
-            Registrarse
-          </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };
