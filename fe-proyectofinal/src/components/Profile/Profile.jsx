@@ -16,7 +16,7 @@ const Profile = () => {
       try {
         // Obtener la información actualizada del usuario
         const response = await api.get(`/users/${user._id}`);
-        setUser(response.data.user); // Actualizar el contexto con los datos del usuario
+        setUser({ ...response.data.user, token: user.token }); // Mantener el token
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
         if (error.response && error.response.status === 401) {
