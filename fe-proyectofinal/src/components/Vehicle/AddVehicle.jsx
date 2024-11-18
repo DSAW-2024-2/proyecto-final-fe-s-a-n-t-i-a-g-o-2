@@ -7,7 +7,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 const AddVehicle = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -33,10 +33,8 @@ const AddVehicle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post(`/users/${user._id}/vehicle`, formData);
+      const response = await api.post('/cars/add', formData);
       alert('Vehículo registrado exitosamente.');
-      // Actualizar el contexto del usuario con la nueva información del vehículo
-      setUser({ ...user, ...response.data.vehicle });
       navigate('/profile');
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
@@ -54,6 +52,7 @@ const AddVehicle = () => {
       <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6">Registrar Vehículo</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
+          {/* Formulario para ingresar los datos del vehículo */}
           <div className="mb-4">
             <label className="block mb-1">Placa del Vehículo</label>
             <input
@@ -66,6 +65,7 @@ const AddVehicle = () => {
               placeholder="Ingresa la placa de tu vehículo"
             />
           </div>
+          {/* Resto de los campos del formulario */}
           <div className="mb-4">
             <label className="block mb-1">Marca</label>
             <input
