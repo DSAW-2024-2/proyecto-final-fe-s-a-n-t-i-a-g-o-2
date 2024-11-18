@@ -11,6 +11,7 @@ const Header = () => {
       <Link to="/main-menu" className="text-2xl font-bold">Deskpinchados</Link>
       <nav>
         <Link to="/profile" className="mr-4">Mi Perfil</Link>
+        <Link to="/vehicle" className="mr-4">Mi Vehículo</Link>
         <button onClick={logout} className="bg-red-500 px-4 py-2 rounded">Logout</button>
       </nav>
     </header>
