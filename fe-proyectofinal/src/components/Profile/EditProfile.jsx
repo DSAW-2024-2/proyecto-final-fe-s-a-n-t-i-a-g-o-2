@@ -39,19 +39,17 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = user.uid;
-
-      if (!userId) {
-        throw new Error('ID de usuario no encontrado.');
-      }
-
-      const response = await api.put(`/users/${userId}`, formData);
+      const response = await api.put(`/users/${user._id}`, formData);
       alert('Perfil actualizado exitosamente.');
-      setUser({ ...response.data.user, uid: userId, token: user.token });
+      setUser({ ...response.data.user, token: user.token }); // Mantener el token
       navigate('/profile');
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
-      alert('Error al actualizar el perfil.');
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert('Error al actualizar el perfil.');
+      }
     }
   };
 
@@ -76,8 +74,60 @@ const EditProfile = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Resto de los campos del formulario */}
-          {/* ... */}
+          <div className="mb-4">
+            <label className="block mb-1">Apellido</label>
+            <input
+              type="text"
+              name="lastname"
+              value={formData.lastname}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Correo Electrónico</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Número de Contacto</label>
+            <input
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">ID Universidad</label>
+            <input
+              type="text"
+              name="iduni"
+              value={formData.iduni}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Foto de Perfil (URL)</label>
+            <input
+              type="text"
+              name="photo"
+              value={formData.photo}
+              onChange={handleInputChange}
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
           <div className="flex mt-6">
             <button
               type="submit"
