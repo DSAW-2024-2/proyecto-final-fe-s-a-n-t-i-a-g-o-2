@@ -18,20 +18,14 @@ const EditVehicle = () => {
     soat: '',
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); // Indica si el vehículo ya existe
-
-  // Obtener datos del vehículo si existe
   useEffect(() => {
     const fetchVehicleData = async () => {
       try {
-        if (!user || !user.uid) {
-          throw new Error('Usuario no autenticado o UID no disponible.');
+        if (!user || !user._id) {
+          throw new Error('Usuario no autenticado o ID no disponible.');
         }
 
-        const userId = user.uid;
-        const response = await api.get(`/cars/${userId}`);
-
+        const response = await api.get(`/cars/${user._id}`);
         setFormData({
           placa: response.data.placa || '',
           marca: response.data.marca || '',
@@ -40,13 +34,8 @@ const EditVehicle = () => {
           carro: response.data.carro || '',
           soat: response.data.soat || '',
         });
-
-        setIsEditing(true); // Indica que estamos editando
       } catch (error) {
         console.error('Error al obtener los datos del vehículo:', error);
-        setIsEditing(false); // Si no existe el vehículo, será para registro
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -55,33 +44,25 @@ const EditVehicle = () => {
     }
   }, [user]);
 
-  // Manejo de cambios en el formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === 'capacidad' ? Number(value) : value,
-    });
+    setFormData({ ...formData, [name]: name === 'capacidad' ? Number(value) : value });
   };
 
-  // Enviar formulario (registrar o editar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = user.uid;
-
-      if (!userId) {
-        throw new Error('ID de usuario no encontrado.');
+      if (!user || !user._id) {
+        throw new Error('Usuario no autenticado o ID no disponible.');
       }
 
-      if (isEditing) {
+      const userId = user._id;
+
+      // Realizar solicitud al backend
+      if (formData.placa) {
         await api.put(`/cars/${userId}`, formData);
         alert('Vehículo actualizado exitosamente.');
-      } else {
-        await api.post('/cars/add', { ...formData, uid: userId });
-        alert('Vehículo registrado exitosamente.');
-      }
-
+      } 
       navigate('/vehicle');
     } catch (error) {
       console.error('Error al guardar los datos del vehículo:', error);
@@ -89,7 +70,7 @@ const EditVehicle = () => {
     }
   };
 
-  if (isLoading) {
+  if (!user) {
     return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
   }
 
@@ -97,9 +78,7 @@ const EditVehicle = () => {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">
-          {isEditing ? 'Editar Vehículo' : 'Registrar Vehículo'}
-        </h2>
+        <h2 className="text-2xl font-bold mb-6">Editar Vehículo</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
           {/* Campo Placa */}
           <div className="mb-4">
@@ -173,13 +152,12 @@ const EditVehicle = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Botones */}
           <div className="flex mt-6">
             <button
               type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4"
             >
-              {isEditing ? 'Guardar Cambios' : 'Registrar Vehículo'}
+              Guardar Cambios
             </button>
             <button
               type="button"
