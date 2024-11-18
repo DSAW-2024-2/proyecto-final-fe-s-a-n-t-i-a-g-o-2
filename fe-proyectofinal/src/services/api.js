@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app', // Cambia esto si tu backend está en otra URL
+  baseURL: 'https://proyecto-final-be-s-a-n-t-i-a-g-o-2.vercel.app', 
 });
 
 // Interceptor para añadir el token a las peticiones

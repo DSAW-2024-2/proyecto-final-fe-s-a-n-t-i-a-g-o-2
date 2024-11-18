@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Obtener el usuario del localStorage al cargar la aplicación
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
+    if (storedUser && storedUser.token) {
       setUser(storedUser);
       api.defaults.headers.common['Authorization'] = `Bearer ${storedUser.token}`;
     }
@@ -21,11 +21,12 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/users/login', { email, password });
-      const { token, user } = response.data;
+      const { token, user: userData } = response.data;
 
       // Almacenar el usuario y el token
-      localStorage.setItem('user', JSON.stringify({ ...user, token }));
-      setUser({ ...user, token });
+      const userWithToken = { ...userData, token };
+      localStorage.setItem('user', JSON.stringify(userWithToken));
+      setUser(userWithToken);
 
       // Establecer el token en los headers de las futuras solicitudes
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -33,13 +34,18 @@ export const AuthProvider = ({ children }) => {
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      alert('Error al iniciar sesión. Verifica tus credenciales.');
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(`Error: ${error.response.data.message}`);
+      } else {
+        alert('Error al iniciar sesión. Verifica tus credenciales.');
+      }
     }
   };
 
   const logout = () => {
     localStorage.removeItem('user');
     setUser(null);
+    delete api.defaults.headers.common['Authorization'];
     navigate('/login');
   };
 
