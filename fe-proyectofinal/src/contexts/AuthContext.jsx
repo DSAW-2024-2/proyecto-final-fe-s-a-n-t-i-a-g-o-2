@@ -25,6 +25,12 @@ export const AuthProvider = ({ children }) => {
 
       // Almacenar el usuario y el token
       const userWithToken = { ...userData, token };
+
+      // Asegúrate de que el 'uid' está presente en 'userWithToken'
+      if (!userWithToken.uid && response.data.uid) {
+        userWithToken.uid = response.data.uid;
+      }
+
       localStorage.setItem('user', JSON.stringify(userWithToken));
       setUser(userWithToken);
 

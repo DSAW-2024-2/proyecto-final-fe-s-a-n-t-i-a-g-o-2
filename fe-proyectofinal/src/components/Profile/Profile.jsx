@@ -7,16 +7,23 @@ import Footer from '../Footer';
 import api from '../../services/api';
 
 const Profile = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
   const [car, setCar] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Verificamos que el 'uid' está disponible
+        const userId = user.uid || user.id || user._id;
+        if (!userId) {
+          throw new Error('ID de usuario no encontrado.');
+        }
+
         // Obtener la información actualizada del usuario
-        const response = await api.get(`/users/${user._id}`);
-        setUser({ ...response.data.user, token: user.token }); // Mantener el token
+        const response = await api.get(`/users/${userId}`);
+        setUserData(response.data.user);
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
         if (error.response && error.response.status === 401) {
@@ -28,7 +35,12 @@ const Profile = () => {
 
     const fetchCarData = async () => {
       try {
-        const response = await api.get(`/cars/${user._id}`);
+        const userId = user.uid || user.id || user._id;
+        if (!userId) {
+          throw new Error('ID de usuario no encontrado.');
+        }
+
+        const response = await api.get(`/cars/${userId}`);
         setCar(response.data.car);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
@@ -40,9 +52,9 @@ const Profile = () => {
       fetchUserData();
       fetchCarData();
     }
-  }, [user, setUser, navigate]);
+  }, [user, navigate]);
 
-  if (!user) {
+  if (!userData) {
     return <div className="text-center mt-10">Cargando...</div>;
   }
 
@@ -53,24 +65,24 @@ const Profile = () => {
         <h2 className="text-2xl font-bold mb-6">Mi Perfil</h2>
         <div className="bg-gray-800 p-6 rounded shadow-md">
           <p className="mb-2">
-            <strong>Nombre:</strong> {user.name}
+            <strong>Nombre:</strong> {userData.name}
           </p>
           <p className="mb-2">
-            <strong>Apellido:</strong> {user.lastname}
+            <strong>Apellido:</strong> {userData.lastname}
           </p>
           <p className="mb-2">
-            <strong>Correo Electrónico:</strong> {user.email}
+            <strong>Correo Electrónico:</strong> {userData.email}
           </p>
           <p className="mb-2">
-            <strong>Número de Contacto:</strong> {user.contact}
+            <strong>Número de Contacto:</strong> {userData.contact}
           </p>
           <p className="mb-2">
-            <strong>ID Universidad:</strong> {user.iduni}
+            <strong>ID Universidad:</strong> {userData.iduni}
           </p>
-          {user.photo && (
+          {userData.photo && (
             <div className="mb-2">
               <strong>Foto de Perfil:</strong>
-              <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
+              <img src={userData.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
             </div>
           )}
           {/* Información del Vehículo */}
