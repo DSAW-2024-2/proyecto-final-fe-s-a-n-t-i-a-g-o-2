@@ -75,7 +75,7 @@ const VehicleProfile = () => {
               <img
                 src={car.soat}
                 alt="Foto del SOAT"
-                className="w-32 h-32 rounded mt-2 border-2 border-gray-500"
+                className="w-32 h-32 rounded-full mt-2 border-2 border-gray-500"
               />
             </div>
           ) : (
@@ -102,6 +102,6 @@ const VehicleProfile = () => {
       <Footer />
     </div>
   );
-};
+};  
 
 export default VehicleProfile;
