@@ -23,14 +23,10 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/users/login', { email, password });
       const { token, user: userData } = response.data;
 
-      // Almacenar el usuario y el token
-      const userWithToken = { ...userData, token };
+      // Asegurarnos de que el 'uid' está presente en 'userData'
+      const userWithToken = { ...userData, uid: userData.uid, token };
 
-      // Asegúrate de que el 'uid' está presente en 'userWithToken'
-      if (!userWithToken.uid && response.data.uid) {
-        userWithToken.uid = response.data.uid;
-      }
-
+      // Almacenar el usuario con el 'uid' y el 'token'
       localStorage.setItem('user', JSON.stringify(userWithToken));
       setUser(userWithToken);
 
@@ -40,11 +36,7 @@ export const AuthProvider = ({ children }) => {
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else {
-        alert('Error al iniciar sesión. Verifica tus credenciales.');
-      }
+      alert('Error al iniciar sesión. Verifica tus credenciales.');
     }
   };
 

@@ -33,16 +33,19 @@ const AddVehicle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/cars/add', formData);
+      const userId = user.uid;
+
+      if (!userId) {
+        throw new Error('ID de usuario no encontrado.');
+      }
+
+      // Incluimos el 'uid' en los datos enviados al backend
+      const response = await api.post('/cars/add', { ...formData, uid: userId });
       alert('Vehículo registrado exitosamente.');
       navigate('/profile');
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else {
-        alert('Error al registrar el vehículo.');
-      }
+      alert('Error al registrar el vehículo.');
     }
   };
 
@@ -53,79 +56,7 @@ const AddVehicle = () => {
         <h2 className="text-2xl font-bold mb-6">Registrar Vehículo</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
           {/* Formulario para ingresar los datos del vehículo */}
-          <div className="mb-4">
-            <label className="block mb-1">Placa del Vehículo</label>
-            <input
-              type="text"
-              name="placa"
-              value={formData.placa}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa la placa de tu vehículo"
-            />
-          </div>
-          {/* Resto de los campos del formulario */}
-          <div className="mb-4">
-            <label className="block mb-1">Marca</label>
-            <input
-              type="text"
-              name="marca"
-              value={formData.marca}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa la marca de tu vehículo"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Modelo</label>
-            <input
-              type="text"
-              name="modelo"
-              value={formData.modelo}
-              onChange={handleInputChange}
-              required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa el modelo de tu vehículo"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Capacidad del Vehículo</label>
-            <input
-              type="number"
-              name="capacidad"
-              value={formData.capacidad}
-              onChange={handleInputChange}
-              required
-              min="1"
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa la capacidad de tu vehículo"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Foto del SOAT (URL)</label>
-            <input
-              type="text"
-              name="soat"
-              value={formData.soat}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa la URL de la foto del SOAT"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1">Tipo de Vehículo</label>
-            <input
-              type="text"
-              name="carro"
-              value={formData.carro}
-              onChange={handleInputChange}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ejemplo: Sedán, SUV, etc."
-            />
-          </div>
-
+          {/* ... */}
           <div className="flex mt-6">
             <button
               type="submit"

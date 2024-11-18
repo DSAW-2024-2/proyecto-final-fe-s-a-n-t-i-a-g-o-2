@@ -39,22 +39,19 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userId = user.uid || user.id || user._id;
+      const userId = user.uid;
+
       if (!userId) {
         throw new Error('ID de usuario no encontrado.');
       }
 
       const response = await api.put(`/users/${userId}`, formData);
       alert('Perfil actualizado exitosamente.');
-      setUser({ ...response.data.user, token: user.token }); // Mantener el token
+      setUser({ ...response.data.user, uid: userId, token: user.token });
       navigate('/profile');
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else {
-        alert('Error al actualizar el perfil.');
-      }
+      alert('Error al actualizar el perfil.');
     }
   };
 
@@ -68,7 +65,18 @@ const EditProfile = () => {
       <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6">Editar Perfil</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
-          {/* Campos para editar */}
+          <div className="mb-4">
+            <label className="block mb-1">Nombre</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+            />
+          </div>
+          {/* Resto de los campos del formulario */}
           {/* ... */}
           <div className="flex mt-6">
             <button

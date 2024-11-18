@@ -15,8 +15,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Verificamos que el 'uid' está disponible
-        const userId = user.uid || user.id || user._id;
+        console.log('User object:', user);
+        const userId = user.uid;
+
         if (!userId) {
           throw new Error('ID de usuario no encontrado.');
         }
@@ -35,7 +36,8 @@ const Profile = () => {
 
     const fetchCarData = async () => {
       try {
-        const userId = user.uid || user.id || user._id;
+        const userId = user.uid;
+
         if (!userId) {
           throw new Error('ID de usuario no encontrado.');
         }
