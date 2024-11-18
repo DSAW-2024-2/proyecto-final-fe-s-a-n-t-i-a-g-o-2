@@ -1,4 +1,3 @@
-// src/components/Vehicle/EditVehicle.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -22,6 +21,7 @@ const EditVehicle = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false); // Indica si el vehículo ya existe
 
+  // Obtener datos del vehículo si existe
   useEffect(() => {
     const fetchVehicleData = async () => {
       try {
@@ -30,11 +30,7 @@ const EditVehicle = () => {
         }
 
         const userId = user.uid;
-        console.log('Obteniendo datos del vehículo para el UID:', userId);
-
-        // Realizamos la solicitud GET al backend para obtener los datos del vehículo
         const response = await api.get(`/cars/${userId}`);
-        console.log('Datos del vehículo recibidos:', response.data);
 
         setFormData({
           placa: response.data.placa || '',
@@ -45,11 +41,10 @@ const EditVehicle = () => {
           soat: response.data.soat || '',
         });
 
-        setIsEditing(true); // El vehículo ya existe, estamos editando
+        setIsEditing(true); // Indica que estamos editando
       } catch (error) {
         console.error('Error al obtener los datos del vehículo:', error);
-        // Si el vehículo no existe, el usuario podrá registrarlo
-        setIsEditing(false);
+        setIsEditing(false); // Si no existe el vehículo, será para registro
       } finally {
         setIsLoading(false);
       }
@@ -60,17 +55,16 @@ const EditVehicle = () => {
     }
   }, [user]);
 
+  // Manejo de cambios en el formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Si el campo es 'capacidad', convertir a número
-    if (name === 'capacidad') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({
+      ...formData,
+      [name]: name === 'capacidad' ? Number(value) : value,
+    });
   };
 
+  // Enviar formulario (registrar o editar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -81,11 +75,9 @@ const EditVehicle = () => {
       }
 
       if (isEditing) {
-        // Actualizar vehículo existente
         await api.put(`/cars/${userId}`, formData);
         alert('Vehículo actualizado exitosamente.');
       } else {
-        // Registrar nuevo vehículo
         await api.post('/cars/add', { ...formData, uid: userId });
         alert('Vehículo registrado exitosamente.');
       }
@@ -105,7 +97,9 @@ const EditVehicle = () => {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">{isEditing ? 'Editar Vehículo' : 'Registrar Vehículo'}</h2>
+        <h2 className="text-2xl font-bold mb-6">
+          {isEditing ? 'Editar Vehículo' : 'Registrar Vehículo'}
+        </h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
           {/* Campo Placa */}
           <div className="mb-4">
@@ -179,6 +173,7 @@ const EditVehicle = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
+          {/* Botones */}
           <div className="flex mt-6">
             <button
               type="submit"

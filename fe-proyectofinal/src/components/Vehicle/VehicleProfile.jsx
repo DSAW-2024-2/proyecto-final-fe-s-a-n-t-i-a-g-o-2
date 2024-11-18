@@ -22,15 +22,17 @@ const VehicleProfile = () => {
         const userId = user.uid;
         console.log('Obteniendo datos del vehículo para el UID:', userId);
 
-        // Realizamos la solicitud GET al backend para obtener los datos del vehículo
         const response = await api.get(`/cars/${userId}`);
         console.log('Datos del vehículo recibidos:', response.data);
 
-        setVehicleData(response.data); // Asignamos los datos al estado
+        setVehicleData(response.data);
       } catch (error) {
         console.error('Error al obtener los datos del vehículo:', error);
-        // Si el vehículo no existe, establecemos vehicleData en null
-        setVehicleData(null);
+        if (error.response && error.response.status === 404) {
+          setVehicleData(null);
+        } else {
+          alert('Error al obtener los datos del vehículo.');
+        }
       } finally {
         setIsLoading(false);
       }
