@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../Footer';
+
 
 const Register = () => {
   const navigate = useNavigate();
@@ -138,7 +138,6 @@ const Register = () => {
           </div>
         </form>
       </div>
-      <Footer />
     </div>
   );
 };
