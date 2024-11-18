@@ -21,16 +21,20 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/users/login', { email, password });
-      const { token, user: userData } = response.data;
+      console.log('Respuesta del backend:', response.data);
 
-      // Almacenar el usuario y el token
-      const userWithToken = { ...userData, token };
+      // Asumimos que la respuesta del backend incluye el token y los datos del usuario en el nivel superior
+      const { token, uid, ...userData } = response.data;
 
-      // Asegúrate de que el 'uid' está presente en 'userWithToken'
-      if (!userWithToken.uid && response.data.uid) {
-        userWithToken.uid = response.data.uid;
+      // Verificar que el uid y el token están presentes
+      if (!uid || !token) {
+        throw new Error('Respuesta del servidor inválida. Faltan token o uid.');
       }
 
+      // Construir el objeto usuario con el token y el uid
+      const userWithToken = { uid, ...userData, token };
+
+      // Almacenar el usuario con el token en el localStorage
       localStorage.setItem('user', JSON.stringify(userWithToken));
       setUser(userWithToken);
 
@@ -40,11 +44,7 @@ export const AuthProvider = ({ children }) => {
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else {
-        alert('Error al iniciar sesión. Verifica tus credenciales.');
-      }
+      alert('Error al iniciar sesión. Verifica tus credenciales.');
     }
   };
 
