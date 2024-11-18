@@ -73,33 +73,6 @@ const Profile = () => {
               <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
             </div>
           )}
-          {/* Información del Vehículo */}
-          {car && (
-            <>
-              <h3 className="text-xl font-bold mt-6 mb-4">Información del Vehículo</h3>
-              <p className="mb-2">
-                <strong>Placa:</strong> {car.placa}
-              </p>
-              <p className="mb-2">
-                <strong>Marca:</strong> {car.marca}
-              </p>
-              <p className="mb-2">
-                <strong>Modelo:</strong> {car.modelo}
-              </p>
-              <p className="mb-2">
-                <strong>Capacidad:</strong> {car.capacidad}
-              </p>
-              <p className="mb-2">
-                <strong>Tipo de Vehículo:</strong> {car.carro}
-              </p>
-              {car.soat && (
-                <div className="mb-2">
-                  <strong>Foto del SOAT:</strong>
-                  <img src={car.soat} alt="Foto del SOAT" className="w-32 h-32 rounded mt-2" />
-                </div>
-              )}
-            </>
-          )}
           <div className="mt-6 flex">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"
