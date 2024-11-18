@@ -22,18 +22,6 @@ const MainMenu = () => {
         {/* Botones de navegación organizados en una cuadrícula */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            onClick={() => navigate('/profile')}
-          >
-            Mi Perfil
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            onClick={() => navigate('/vehicle')}
-          >
-            Mi Vehículo
-          </button>
-          <button
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             onClick={() => navigate('/new-trip')}
           >
