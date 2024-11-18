@@ -1,9 +1,9 @@
 // src/pages/EditVehiclePage.jsx
 import React from 'react';
-import Vehicle from '../components/Vehicle/VehicleProfile ';
+import VehicleProfile from '../components/Vehicle/VehicleProfile';
 
-const VehicleProfile = () => {
-  return <Vehicle />;
+const VehicleProfilePage = () => {
+  return <VehicleProfile />;
 };
 
-export default VehicleProfile;
+export default VehicleProfilePage;
