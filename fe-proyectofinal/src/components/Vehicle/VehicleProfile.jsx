@@ -1,3 +1,4 @@
+// src/components/Vehicle/VehicleProfile.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -9,18 +10,28 @@ const VehicleProfile = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        if (!user || !user._id) {
-          throw new Error('Usuario no autenticado o ID no disponible.');
+        if (!user || !user.uid) {
+          throw new Error('Usuario no autenticado o UID no disponible.');
         }
 
-        const response = await api.get(`/cars/${user._id}`);
-        setCar(response.data.car);
+        console.log('Obteniendo datos del vehículo para el UID:', user.uid);
+
+        // Realizamos la solicitud GET al backend para obtener los datos del vehículo
+        const response = await api.get(`/cars/${user.uid}`);
+        console.log('Datos del vehículo recibidos:', response.data);
+
+        setCar(response.data.vehicle);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
+        // Si el vehículo no existe, establecemos car en null
+        setCar(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -28,6 +39,10 @@ const VehicleProfile = () => {
       fetchCarData();
     }
   }, [user]);
+
+  if (isLoading) {
+    return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
+  }
 
   if (!user) {
     return <div className="text-center mt-10">Cargando datos del usuario...</div>;
@@ -71,7 +86,7 @@ const VehicleProfile = () => {
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 w-full max-w-xs"
               onClick={() => navigate('/edit-vehicle')}
             >
-              Editar Vehículo
+              {car ? 'Editar Vehículo' : 'Registrar Vehículo'}
             </button>
             <button
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full max-w-xs"
