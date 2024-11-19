@@ -50,8 +50,8 @@ const Profile = () => {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Mi Perfil</h2>
-        <div className="bg-gray-800 p-6 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Mi Perfil</h2>
+        <div className="bg-gray-800 p-6 rounded shadow-md max-w-lg mx-auto">
           <p className="mb-2">
             <strong>Nombre:</strong> {user.name}
           </p>
@@ -73,15 +73,15 @@ const Profile = () => {
               <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
             </div>
           )}
-          <div className="mt-6 flex">
+          <div className="mt-6 flex flex-col items-center">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 w-full max-w-xs"
               onClick={() => navigate('/edit-profile')}
             >
               Editar Perfil
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full max-w-xs"
               onClick={() => navigate('/main-menu')}
             >
               Volver al Menú Principal
