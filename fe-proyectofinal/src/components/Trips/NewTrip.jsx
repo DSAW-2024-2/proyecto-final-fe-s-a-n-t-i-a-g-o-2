@@ -15,15 +15,16 @@ const NewTrip = () => {
     route: '',
     departure: '',
     price: '',
-    availableSeats: 1, // Añadido este campo si el backend lo espera
+    availableSeats: 1,
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Si el campo es 'availableSeats', convertir a número
     if (name === 'availableSeats') {
       setFormData({ ...formData, [name]: Number(value) });
+    } else if (name === 'price') {
+      setFormData({ ...formData, [name]: parseFloat(value) });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -32,14 +33,13 @@ const NewTrip = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Ruta ajustada para coincidir con el backend
-      const response = await api.post('/trips/newtrip', formData);
+      const response = await api.post('/trips/add', formData);
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al registrar el viaje:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(`Error: ${error.response.data.error}`);
       } else {
         alert('Error al registrar el viaje.');
       }
