@@ -4,9 +4,10 @@ import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../Footer';
+import Header from '../Header';
 
 const NewTrip = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext); // Acceder al usuario autenticado
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,16 +16,14 @@ const NewTrip = () => {
     route: '',
     departure: '',
     price: '',
-    availableSeats: 1, // Asientos disponibles
+    seats: 1, // Asientos disponibles
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Si el campo es 'availableSeats', convertir a número
-    if (name === 'availableSeats') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else if (name === 'price') {
+    // Si el campo es 'seats' o 'price', convertir a número
+    if (name === 'seats' || name === 'price') {
       setFormData({ ...formData, [name]: parseFloat(value) });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -33,16 +32,22 @@ const NewTrip = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      // Validar que el usuario esté autenticado
+      if (!user || !user.token) {
+        throw new Error('Usuario no autenticado o token no disponible.');
+      }
+
       // Realizar solicitud al backend en la ruta /trips/newtrip
       const response = await api.post('/trips/newtrip', formData, {
         headers: {
-          Authorization: `Bearer ${user?.token}`, // Asegurarse de pasar el token
+          Authorization: `Bearer ${user.token}`, // Asegurarse de pasar el token
         },
       });
 
       alert('Viaje registrado exitosamente.');
-      navigate('/main-menu');
+      navigate('/main-menu'); // Redirigir al menú principal
     } catch (error) {
       console.error('Error al registrar el viaje:', error);
       if (error.response && error.response.data && error.response.data.error) {
@@ -55,9 +60,10 @@ const NewTrip = () => {
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+      <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Crear Nuevo Viaje</h2>
-        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Crear Nuevo Viaje</h2>
+        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md max-w-md mx-auto">
           <div className="mb-4">
             <label className="block mb-1">Punto de Inicio</label>
             <input
@@ -123,8 +129,8 @@ const NewTrip = () => {
             <label className="block mb-1">Asientos Disponibles</label>
             <input
               type="number"
-              name="availableSeats"
-              value={formData.availableSeats}
+              name="seats"
+              value={formData.seats}
               onChange={handleInputChange}
               required
               min="1"
@@ -132,10 +138,10 @@ const NewTrip = () => {
               placeholder="Ejemplo: 3"
             />
           </div>
-          <div className="flex mt-6">
+          <div className="flex mt-6 justify-between">
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
               Crear Viaje
             </button>

@@ -10,23 +10,26 @@ const VehicleProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
 
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        // Verificar que el usuario esté autenticado
-        if (!user || !user._id || !user.token) {
+        // Verificar que el usuario esté autenticado y tenga un token
+        if (!user || !user.token) {
           throw new Error('Usuario no autenticado o token no disponible.');
         }
 
-        // Obtener la información actualizada del usuario para obtener el vehicleuid
-        const userResponse = await api.get(`/users/${user._id}`);
-        const updatedUser = { ...userResponse.data.user, token: user.token };
-        setUser(updatedUser);
+        // Si el vehicleuid no está en el usuario, obtenerlo desde el backend
+        let vehicleuid = user.vehicleuid;
 
-        // Obtener el vehicleuid del usuario actualizado
-        const vehicleuid = updatedUser.vehicleuid;
+        if (!vehicleuid) {
+          // Obtener la información actualizada del usuario
+          const userResponse = await api.get(`/users/${user._id}`);
+          const updatedUser = { ...userResponse.data.user, token: user.token }; // Mantener el token
+          setUser(updatedUser);
+          vehicleuid = updatedUser.vehicleuid;
+        }
 
         if (!vehicleuid) {
           console.error('El usuario no tiene un vehicleuid asignado.');
@@ -34,7 +37,7 @@ const VehicleProfile = () => {
           return;
         }
 
-        // Realizar la solicitud al backend para obtener la información del vehículo
+        // Obtener la información del vehículo utilizando el vehicleuid
         const response = await api.get(`/cars/${vehicleuid}`);
         setCar(response.data.vehicle);
       } catch (error) {
