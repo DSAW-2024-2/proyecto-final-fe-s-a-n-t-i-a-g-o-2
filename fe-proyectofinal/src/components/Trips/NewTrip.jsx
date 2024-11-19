@@ -15,12 +15,13 @@ const NewTrip = () => {
     route: '',
     departure: '',
     price: '',
-    availableSeats: 1,
+    availableSeats: 1, // Asientos disponibles
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
+    // Si el campo es 'availableSeats', convertir a número
     if (name === 'availableSeats') {
       setFormData({ ...formData, [name]: Number(value) });
     } else if (name === 'price') {
@@ -33,7 +34,13 @@ const NewTrip = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/trips/newtrip', formData);
+      // Realizar solicitud al backend en la ruta /trips/newtrip
+      const response = await api.post('/trips/newtrip', formData, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`, // Asegurarse de pasar el token
+        },
+      });
+
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
