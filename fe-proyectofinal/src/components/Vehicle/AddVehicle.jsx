@@ -36,7 +36,7 @@ const AddVehicle = () => {
     try {
       const response = await api.post('/cars/add', formData);
       alert('Vehículo registrado exitosamente.');
-      navigate('/profile');
+      navigate('/main-menu');
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
       if (error.response && error.response.data && error.response.data.message) {
