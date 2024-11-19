@@ -21,7 +21,6 @@ const VehicleProfile = () => {
         setCar(response.data.car);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
-        // Si no hay vehículo, no hacemos nada
       }
     };
 
@@ -34,64 +33,48 @@ const VehicleProfile = () => {
     return <div className="text-center mt-10">Cargando datos del usuario...</div>;
   }
 
-  if (!car) {
-    return (
-      <div className="text-center mt-10">
-        <p>No se encontraron datos del vehículo.</p>
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
-          onClick={() => navigate('/add-vehicle')}
-        >
-          Registrar Vehículo
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Mi Vehículo</h2>
-        <div className="bg-gray-800 p-6 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Mi Vehículo</h2>
+        <div className="bg-gray-800 p-6 rounded shadow-md max-w-lg mx-auto">
           <p className="mb-2">
-            <strong>Placa:</strong> {car.placa || 'No disponible'}
+            <strong>Placa:</strong> {car?.placa || 'No disponible'}
           </p>
           <p className="mb-2">
-            <strong>Marca:</strong> {car.marca || 'No disponible'}
+            <strong>Marca:</strong> {car?.marca || 'No disponible'}
           </p>
           <p className="mb-2">
-            <strong>Modelo:</strong> {car.modelo || 'No disponible'}
+            <strong>Modelo:</strong> {car?.modelo || 'No disponible'}
           </p>
           <p className="mb-2">
-            <strong>Capacidad:</strong> {car.capacidad || 'No disponible'}
+            <strong>Capacidad:</strong> {car?.capacidad || 'No disponible'}
           </p>
           <p className="mb-2">
-            <strong>Tipo de Vehículo:</strong> {car.carro || 'No disponible'}
+            <strong>Tipo de Vehículo:</strong> {car?.carro || 'No disponible'}
           </p>
-          {car.soat ? (
-            <div className="mb-2">
-              <strong>Foto del SOAT:</strong>
-              <img
-                src={car.soat}
-                alt="Foto del SOAT"
-                className="w-32 h-32 rounded-full mt-2 border-2 border-gray-500"
-              />
-            </div>
+          <p className="mb-2">
+            <strong>Foto del SOAT:</strong>
+          </p>
+          {car?.soat ? (
+            <img
+              src={car.soat}
+              alt="Foto del SOAT"
+              className="w-32 h-32 rounded-full mt-2 border-2 border-gray-500 mx-auto"
+            />
           ) : (
-            <p className="mb-2">
-              <strong>Foto del SOAT:</strong> No disponible
-            </p>
+            <p className="text-center">No disponible</p>
           )}
-          <div className="mt-6 flex">
+          <div className="mt-6 flex flex-col items-center">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 w-full max-w-xs"
               onClick={() => navigate('/edit-vehicle')}
             >
               Editar Vehículo
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full max-w-xs"
               onClick={() => navigate('/main-menu')}
             >
               Volver al Menú Principal
@@ -102,6 +85,6 @@ const VehicleProfile = () => {
       <Footer />
     </div>
   );
-};  
+};
 
 export default VehicleProfile;
