@@ -33,7 +33,7 @@ const NewTrip = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/trips/add', formData);
+      const response = await api.post('/trips/newtrip', formData);
       alert('Viaje registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
