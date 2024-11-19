@@ -1,9 +1,9 @@
 // src/components/Vehicle/EditVehicle.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import Header from '../Header';
-import Footer from '../Footer';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer';
 import api from '../../services/api';
 
 const EditVehicle = () => {
@@ -19,98 +19,73 @@ const EditVehicle = () => {
     soat: '',
   });
 
-  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchVehicleData = async () => {
       try {
-        if (!user || !user.uid) {
-          throw new Error('Usuario no autenticado o UID no disponible.');
-        }
-
-        console.log('Obteniendo datos del vehículo para el UID:', user.uid);
-
-        const response = await api.get(`/cars/${user.uid}`);
-        console.log('Datos del vehículo recibidos:', response.data);
-
+        // Obtener la información del vehículo
+        const response = await api.get(`/cars/${user._id}`);
         setFormData({
-          placa: response.data.vehicle.placa || '',
-          marca: response.data.vehicle.marca || '',
-          modelo: response.data.vehicle.modelo || '',
-          capacidad: response.data.vehicle.capacidad || '',
-          carro: response.data.vehicle.carro || '',
-          soat: response.data.vehicle.soat || '',
+          placa: response.data.car.placa || '',
+          marca: response.data.car.marca || '',
+          modelo: response.data.car.modelo || '',
+          capacidad: response.data.car.capacidad || '',
+          carro: response.data.car.carro || '',
+          soat: response.data.car.soat || '',
         });
-
         setIsEditing(true);
       } catch (error) {
-        console.error('Error al obtener los datos del vehículo:', error);
-        if (error.response && error.response.status === 404) {
-          setIsEditing(false);
-        } else if (error.response && error.response.status === 401) {
+        console.error('Error al obtener el vehículo:', error);
+        if (error.response && error.response.status === 401) {
           alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
           navigate('/login');
-        } else {
-          alert('Error al obtener los datos del vehículo.');
         }
-      } finally {
-        setIsLoading(false);
+        // Si el usuario no tiene vehículo, estamos registrando uno nuevo
+        setIsEditing(false);
       }
     };
 
     if (user) {
       fetchVehicleData();
-    } else {
-      setIsLoading(false);
     }
   }, [user, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'capacidad') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!user || !user.uid) {
-        throw new Error('ID de usuario no encontrado.');
-      }
-
       if (isEditing) {
-        await api.put(`/cars/${user.uid}`, formData);
+        // Actualizar vehículo existente
+        await api.put(`/cars/${user._id}`, formData);
         alert('Vehículo actualizado exitosamente.');
       } else {
-        await api.post('/cars/add', { ...formData, uid: user.uid });
+        // Registrar nuevo vehículo
+        await api.post('/cars/add', { ...formData, uid: user._id });
         alert('Vehículo registrado exitosamente.');
       }
-
       navigate('/vehicle');
     } catch (error) {
-      console.error('Error al guardar los datos del vehículo:', error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
-      } else if (error.response && error.response.status === 401) {
+      console.error('Error al guardar el vehículo:', error);
+      if (error.response && error.response.status === 401) {
         alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
         navigate('/login');
       } else {
-        alert('Error al guardar los datos del vehículo.');
+        alert('Error al guardar el vehículo.');
       }
     }
   };
 
-  if (isLoading) {
-    return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
+  if (!user) {
+    return <div className="text-center mt-10">Cargando...</div>;
   }
 
   return (
-    // Aquí va el formulario con los campos para editar o registrar el vehículo
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
