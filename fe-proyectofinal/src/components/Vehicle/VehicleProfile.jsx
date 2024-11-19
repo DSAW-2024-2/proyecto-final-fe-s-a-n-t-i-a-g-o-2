@@ -28,8 +28,14 @@ const VehicleProfile = () => {
         setCar(response.data.vehicle);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
-        // Si el vehículo no existe, establecemos car en null
-        setCar(null);
+        if (error.response && error.response.status === 404) {
+          setCar(null);
+        } else if (error.response && error.response.status === 401) {
+          alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
+          navigate('/login');
+        } else {
+          alert('Error al obtener los datos del vehículo.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -37,15 +43,17 @@ const VehicleProfile = () => {
 
     if (user) {
       fetchCarData();
+    } else {
+      setIsLoading(false);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   if (isLoading) {
     return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
   }
 
   if (!user) {
-    return <div className="text-center mt-10">Cargando datos del usuario...</div>;
+    return <div className="text-center mt-10">Usuario no autenticado.</div>;
   }
 
   return (

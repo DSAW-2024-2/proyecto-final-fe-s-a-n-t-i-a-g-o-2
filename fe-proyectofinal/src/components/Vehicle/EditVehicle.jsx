@@ -48,6 +48,9 @@ const EditVehicle = () => {
         console.error('Error al obtener los datos del vehículo:', error);
         if (error.response && error.response.status === 404) {
           setIsEditing(false);
+        } else if (error.response && error.response.status === 401) {
+          alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
+          navigate('/login');
         } else {
           alert('Error al obtener los datos del vehículo.');
         }
@@ -58,8 +61,10 @@ const EditVehicle = () => {
 
     if (user) {
       fetchVehicleData();
+    } else {
+      setIsLoading(false);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +96,9 @@ const EditVehicle = () => {
       console.error('Error al guardar los datos del vehículo:', error);
       if (error.response && error.response.data && error.response.data.message) {
         alert(`Error: ${error.response.data.message}`);
+      } else if (error.response && error.response.status === 401) {
+        alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        navigate('/login');
       } else {
         alert('Error al guardar los datos del vehículo.');
       }
@@ -102,6 +110,7 @@ const EditVehicle = () => {
   }
 
   return (
+    // Aquí va el formulario con los campos para editar o registrar el vehículo
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
