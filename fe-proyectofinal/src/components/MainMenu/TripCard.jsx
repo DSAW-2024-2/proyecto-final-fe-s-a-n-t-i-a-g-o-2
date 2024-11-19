@@ -12,12 +12,18 @@ const TripCard = ({ trip }) => {
         <strong>Hasta:</strong> {trip.end}
       </p>
       <p className="mb-1">
-        <strong>Salida:</strong> {trip.departure}
+        <strong>Salida:</strong> {new Date(trip.departure).toLocaleString()}
       </p>
       <p className="mb-1">
-        <strong>Precio:</strong> ${trip.price}
+        <strong>Precio:</strong> ${trip.price.toFixed(2)}
       </p>
-      {/* Puedes agregar más información o acciones aquí */}
+      <p className="mb-1">
+        <strong>Asientos Disponibles:</strong> {trip.seats}
+      </p>
+      {/* Botón para reservar o más acciones */}
+      <button className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Reservar
+      </button>
     </div>
   );
 };
