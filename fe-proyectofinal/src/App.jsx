@@ -10,8 +10,9 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NewTripPage from './pages/NewTripPage';
 import AddVehiclePage from './pages/AddVehiclePage';
-import VehicleProfilePage from './pages/VehicleProfilePage'; // Nueva página
-import EditVehiclePage from './pages/EditVehiclePage'; // Nueva página
+import VehicleProfilePage from './pages/VehicleProfilePage';
+import EditVehiclePage from './pages/EditVehiclePage';
+import ReserveTripPage from './pages/ReserveTripPage'; // Nueva página para reservar viajes
 import PrivateRoute from './components/PrivateRoute';
 import './styles/index.css';
 
@@ -80,6 +81,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <EditVehiclePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/reserve-trip/:tripID"
+              element={
+                <PrivateRoute>
+                  <ReserveTripPage />
                 </PrivateRoute>
               }
             />
