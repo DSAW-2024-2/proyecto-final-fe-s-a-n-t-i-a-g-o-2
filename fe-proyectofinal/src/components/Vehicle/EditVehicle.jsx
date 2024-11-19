@@ -25,7 +25,7 @@ const EditVehicle = () => {
     const fetchVehicleData = async () => {
       try {
         // Obtener la información del vehículo
-        const response = await api.get(`/cars/${user._id}`);
+        const response = await api.get(`/cars/${vehicles._id}`);
         setFormData({
           placa: response.data.car.placa || '',
           marca: response.data.car.marca || '',
@@ -62,11 +62,11 @@ const EditVehicle = () => {
     try {
       if (isEditing) {
         // Actualizar vehículo existente
-        await api.put(`/cars/${user._id}`, formData);
+        await api.put(`/cars/${vehicle._id}`, formData);
         alert('Vehículo actualizado exitosamente.');
       } else {
         // Registrar nuevo vehículo
-        await api.post('/cars/add', { ...formData, uid: user._id });
+        await api.post('/cars/add', { ...formData, uid: vehicle._id });
         alert('Vehículo registrado exitosamente.');
       }
       navigate('/vehicle');
