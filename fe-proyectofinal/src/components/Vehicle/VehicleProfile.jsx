@@ -15,7 +15,7 @@ const VehicleProfile = () => {
     const fetchCarData = async () => {
       try {
         // Obtener la información del vehículo
-        const response = await api.get(`/cars/${user._id}`);
+        const response = await api.get(`/cars/${vehicle._id}`);
         setCar(response.data.car);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
