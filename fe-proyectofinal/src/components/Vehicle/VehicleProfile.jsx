@@ -7,29 +7,21 @@ import Footer from '../Footer';
 import api from '../../services/api';
 
 const VehicleProfile = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        // Verificar que el usuario esté autenticado y tenga un token
-        if (!user || !user.token) {
+        // Verificar que el usuario esté autenticado
+        if (!user || !user._id || !user.token) {
           throw new Error('Usuario no autenticado o token no disponible.');
         }
 
-        // Si el vehicleuid no está en el usuario, obtenerlo desde el backend
-        let vehicleuid = user.vehicleuid;
-
-        if (!vehicleuid) {
-          // Obtener la información actualizada del usuario
-          const userResponse = await api.get(`/users/${user._id}`);
-          const updatedUser = { ...userResponse.data.user, token: user.token }; // Mantener el token
-          setUser(updatedUser);
-          vehicleuid = updatedUser.vehicleuid;
-        }
+        // Obtener el vehicleuid del usuario
+        const vehicleuid = user.vehicleuid;
 
         if (!vehicleuid) {
           console.error('El usuario no tiene un vehicleuid asignado.');
@@ -37,7 +29,7 @@ const VehicleProfile = () => {
           return;
         }
 
-        // Obtener la información del vehículo utilizando el vehicleuid
+        // Realizar la solicitud al backend para obtener la información del vehículo
         const response = await api.get(`/cars/${vehicleuid}`);
         setCar(response.data.vehicle);
       } catch (error) {
@@ -53,12 +45,8 @@ const VehicleProfile = () => {
       }
     };
 
-    if (user) {
-      fetchCarData();
-    } else {
-      setIsLoading(false);
-    }
-  }, [user, setUser, navigate]);
+    fetchCarData();
+  }, [user, navigate]);
 
   if (isLoading) {
     return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
