@@ -6,6 +6,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import Header from '../Header';
 import Footer from '../Footer';
 
+
 const AddVehicle = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
