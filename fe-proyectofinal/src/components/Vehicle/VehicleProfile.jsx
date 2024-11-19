@@ -7,7 +7,7 @@ import Footer from '../Footer';
 import api from '../../services/api';
 
 const VehicleProfile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,8 +20,13 @@ const VehicleProfile = () => {
           throw new Error('Usuario no autenticado o token no disponible.');
         }
 
-        // Obtener el vehicleuid del usuario
-        const vehicleuid = user.vehicleuid;
+        // Obtener la información actualizada del usuario para obtener el vehicleuid
+        const userResponse = await api.get(`/users/${user._id}`);
+        const updatedUser = { ...userResponse.data.user, token: user.token };
+        setUser(updatedUser);
+
+        // Obtener el vehicleuid del usuario actualizado
+        const vehicleuid = updatedUser.vehicleuid;
 
         if (!vehicleuid) {
           console.error('El usuario no tiene un vehicleuid asignado.');
@@ -45,8 +50,12 @@ const VehicleProfile = () => {
       }
     };
 
-    fetchCarData();
-  }, [user, navigate]);
+    if (user) {
+      fetchCarData();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user, setUser, navigate]);
 
   if (isLoading) {
     return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
