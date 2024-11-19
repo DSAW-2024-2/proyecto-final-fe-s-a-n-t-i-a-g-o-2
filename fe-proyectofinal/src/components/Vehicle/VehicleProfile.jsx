@@ -1,39 +1,59 @@
 // src/components/Vehicle/VehicleProfile.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import Header from '../Header';
+import Footer from '../Footer';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../Footer';
 import api from '../../services/api';
 
 const VehicleProfile = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        // Obtener la información del vehículo
-        const response = await api.get(`/cars/${vehicle._id}`);
-        setCar(response.data.car);
+        if (!user || !user.uid) {
+          throw new Error('Usuario no autenticado o UID no disponible.');
+        }
+
+        console.log('Obteniendo datos del vehículo para el UID:', user.uid);
+
+        // Realizamos la solicitud GET al backend para obtener los datos del vehículo
+        const response = await api.get(`/cars/${user.uid}`);
+        console.log('Datos del vehículo recibidos:', response.data);
+
+        setCar(response.data.vehicle);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 404) {
+          setCar(null);
+        } else if (error.response && error.response.status === 401) {
           alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
           navigate('/login');
+        } else {
+          alert('Error al obtener los datos del vehículo.');
         }
-        // Si el usuario no tiene vehículo, no hacemos nada
+      } finally {
+        setIsLoading(false);
       }
     };
 
     if (user) {
       fetchCarData();
+    } else {
+      setIsLoading(false);
     }
   }, [user, navigate]);
 
+  if (isLoading) {
+    return <div className="text-center mt-10">Cargando datos del vehículo...</div>;
+  }
+
   if (!user) {
-    return <div className="text-center mt-10">Cargando...</div>;
+    return <div className="text-center mt-10">Usuario no autenticado.</div>;
   }
 
   return (
@@ -57,11 +77,17 @@ const VehicleProfile = () => {
           <p className="mb-2">
             <strong>Tipo de Vehículo:</strong> {car?.carro || 'No disponible'}
           </p>
-          {car?.soat && (
-            <div className="mb-2">
-              <strong>Foto del SOAT:</strong>
-              <img src={car.soat} alt="Foto del SOAT" className="w-32 h-32 rounded-full mt-2" />
-            </div>
+          <p className="mb-2">
+            <strong>Foto del SOAT:</strong>
+          </p>
+          {car?.soat ? (
+            <img
+              src={car.soat}
+              alt="Foto del SOAT"
+              className="w-32 h-32 rounded-full mt-2 border-2 border-gray-500 mx-auto"
+            />
+          ) : (
+            <p className="text-center">No disponible</p>
           )}
           <div className="mt-6 flex flex-col items-center">
             <button
