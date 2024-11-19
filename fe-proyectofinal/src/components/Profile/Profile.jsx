@@ -50,44 +50,38 @@ const Profile = () => {
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       <Header />
       <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6 text-center">Mi Perfil</h2>
-        <div className="bg-gray-800 p-6 rounded shadow-md max-w-lg mx-auto">
+        <h2 className="text-2xl font-bold mb-6">Mi Perfil</h2>
+        <div className="bg-gray-800 p-6 rounded shadow-md">
           <p className="mb-2">
             <strong>Nombre:</strong> {user.name}
           </p>
           <p className="mb-2">
-            <strong>Apellido:</strong> {user.lastname }
+            <strong>Apellido:</strong> {user.lastname}
           </p>
           <p className="mb-2">
-            <strong>Correo Electrónico:</strong> {user.email }
+            <strong>Correo Electrónico:</strong> {user.email}
           </p>
           <p className="mb-2">
-            <strong>Número de Contacto:</strong> {user.contact }
+            <strong>Número de Contacto:</strong> {user.contact}
           </p>
           <p className="mb-2">
-            <strong>ID Universidad:</strong> {user.iduni }
+            <strong>ID Universidad:</strong> {user.iduni}
           </p>
-          <p className="mb-2">
-            <strong>Foto de Perfil:</strong>
-          </p>
-          {user.photo ? (
-            <img
-              src={user.photo}
-              alt="Foto de Perfil"
-              className="w-32 h-32 rounded-full mt-2 border-2 border-gray-500 mx-auto"
-            />
-          ) : (
-            <p className="text-center">No disponible</p>
+          {user.photo && (
+            <div className="mb-2">
+              <strong>Foto de Perfil:</strong>
+              <img src={user.photo} alt="Foto de Perfil" className="w-32 h-32 rounded-full mt-2" />
+            </div>
           )}
-          <div className="mt-6 flex flex-col items-center">
+          <div className="mt-6 flex">
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4 w-full max-w-xs"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-4"
               onClick={() => navigate('/edit-profile')}
             >
               Editar Perfil
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full max-w-xs"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               onClick={() => navigate('/main-menu')}
             >
               Volver al Menú Principal
@@ -98,4 +92,6 @@ const Profile = () => {
       <Footer />
     </div>
   );
-}  
+};
+
+export default Profile;
