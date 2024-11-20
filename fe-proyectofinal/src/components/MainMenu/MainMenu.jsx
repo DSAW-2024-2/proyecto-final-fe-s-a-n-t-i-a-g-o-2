@@ -5,6 +5,8 @@ import Footer from '../Footer';
 import TripCard from './TripCard';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import logo from '../../assets/Deskpinchados-8-10-2024.png'; // Ruta relativa del logo
+import fondo from '../../assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg'; // Ruta relativa del fondo
 
 const MainMenu = () => {
   const { user } = useContext(AuthContext);
@@ -51,59 +53,53 @@ const MainMenu = () => {
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundImage: `url(${fondo})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
-      <div className="container mx-auto p-6 flex-grow">
-        {/* Mostrar mensaje de bienvenida si el usuario está autenticado */}
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {user ? `Bienvenido, ${user.name}` : 'Menú Principal'}
-        </h2>
-
-        {/* Botones de navegación */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            onClick={() => navigate('/new-trip')}
-          >
-            Crear Nuevo Viaje
-          </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            onClick={() => navigate('/add-vehicle')}
-          >
-            Registrar Vehículo
-          </button>
+      <div className="container mx-auto p-6 flex-grow text-white">
+        {/* Logo y bienvenida */}
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="Deskpinchados" className="w-64 mb-4" />
+          <h2 className="text-3xl font-bold text-center">
+            Bienvenido, {user.name}!
+          </h2>
         </div>
 
         {/* Filtros */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold mb-4 text-center">Filtrar Viajes</h3>
+          <h3 className="text-2xl font-bold mb-4 text-center">Filtrar Viajes</h3>
           <div className="flex flex-col md:flex-row gap-4">
             <input
               type="text"
-              placeholder="Punto de Inicio"
+              placeholder="Filtrar por punto de salida"
               value={startPoint}
               onChange={(e) => setStartPoint(e.target.value)}
-              className="p-2 rounded bg-gray-700 border border-gray-600 text-white flex-grow"
+              className="p-3 rounded bg-gray-800 border border-gray-600 text-white flex-grow"
             />
             <input
               type="number"
-              placeholder="Mínimo de Asientos"
+              placeholder="Cupos mínimos"
               value={minSeats}
               onChange={(e) => setMinSeats(e.target.value)}
-              className="p-2 rounded bg-gray-700 border border-gray-600 text-white flex-grow"
+              className="p-3 rounded bg-gray-800 border border-gray-600 text-white flex-grow"
             />
             <button
               onClick={handleFilter}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
             >
               Aplicar Filtros
             </button>
           </div>
         </div>
 
-        {/* Lista de viajes disponibles */}
-        <h2 className="text-2xl font-bold mb-6 text-center">Viajes Disponibles</h2>
+        {/* Lista de viajes */}
+        <h3 className="text-2xl font-bold mb-6 text-center">Viajes Disponibles</h3>
         {isLoading ? (
           <div className="text-center">Cargando viajes...</div>
         ) : trips.length > 0 ? (
