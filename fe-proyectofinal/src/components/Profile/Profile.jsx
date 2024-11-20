@@ -4,6 +4,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../Footer';
 import api from '../../services/api';
+import fondo from '../../assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg'; // Ruta relativa del fondo
 
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -37,7 +38,7 @@ const Profile = () => {
     <div
       className="flex flex-col min-h-screen"
       style={{
-        backgroundImage: `url(/assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg)`,
+        backgroundImage: `url(${fondo})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
