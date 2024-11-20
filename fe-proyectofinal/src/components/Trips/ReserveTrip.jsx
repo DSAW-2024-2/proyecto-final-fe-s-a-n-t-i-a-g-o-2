@@ -7,7 +7,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 const ReserveTrip = () => {
-  const { tripID } = useParams();
+  const { driverUID } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [trip, setTrip] = useState(null);
@@ -17,7 +17,7 @@ const ReserveTrip = () => {
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const response = await api.get(`/trips/${tripID}`);
+        const response = await api.get(`/trips/driver/${driverUID}`);
         setTrip(response.data.trip);
       } catch (error) {
         console.error('Error al obtener el viaje:', error);
@@ -27,12 +27,12 @@ const ReserveTrip = () => {
     };
 
     fetchTrip();
-  }, [tripID, navigate]);
+  }, [driverUID, navigate]);
 
   const handleReserve = async () => {
     try {
       const data = {
-        tripID,
+        driverUID,
         seatsReserved,
         pickupPoint,
       };
@@ -67,24 +67,7 @@ const ReserveTrip = () => {
       <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6 text-center">Reservar Viaje</h2>
         <div className="bg-gray-800 p-6 rounded shadow-md max-w-md mx-auto">
-          <p className="mb-2">
-            <strong>Ruta:</strong> {trip.route}
-          </p>
-          <p className="mb-2">
-            <strong>Desde:</strong> {trip.start}
-          </p>
-          <p className="mb-2">
-            <strong>Hasta:</strong> {trip.end}
-          </p>
-          <p className="mb-2">
-            <strong>Salida:</strong> {new Date(trip.departure).toLocaleString()}
-          </p>
-          <p className="mb-2">
-            <strong>Precio por asiento:</strong> ${trip.price.toFixed(2)}
-          </p>
-          <p className="mb-2">
-            <strong>Asientos disponibles:</strong> {trip.seats}
-          </p>
+          {/* Mostrar detalles del viaje */}
           <div className="mt-4">
             <label className="block mb-1">Número de asientos a reservar</label>
             <input

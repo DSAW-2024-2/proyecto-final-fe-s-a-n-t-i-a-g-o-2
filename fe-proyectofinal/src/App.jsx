@@ -85,7 +85,7 @@ function App() {
               }
             />
             <Route
-              path="/reserve-trip/:tripID"
+              path="/reserve-trip/:driverUID"
               element={
                 <PrivateRoute>
                   <ReserveTripPage />

@@ -9,7 +9,7 @@ const TripCard = ({ trip, onTripDeleted }) => {
   const navigate = useNavigate();
 
   const handleReserve = () => {
-    navigate(`/reserve-trip/${trip.id}`);
+    navigate(`/reserve-trip/${trip.driverUID}`);
   };
 
   const handleDelete = async () => {
