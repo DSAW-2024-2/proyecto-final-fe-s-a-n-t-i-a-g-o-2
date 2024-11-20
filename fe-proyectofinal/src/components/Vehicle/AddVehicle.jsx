@@ -45,8 +45,14 @@ const AddVehicle = () => {
     data.append('marca', formData.marca);
     data.append('modelo', formData.modelo);
     data.append('capacidad', formData.capacidad);
-    data.append('carro', formData.carro);
-    data.append('soat', formData.soat);
+    
+    // Solo agregar las imágenes si están presentes
+    if (formData.carro) {
+      data.append('carro', formData.carro);
+    }
+    if (formData.soat) {
+      data.append('soat', formData.soat);
+    }
 
     try {
       const response = await axios.post('/api/cars/add', data, {
@@ -131,24 +137,22 @@ const AddVehicle = () => {
           </div>
           {/* Campo Foto del Vehículo */}
           <div className="mb-4">
-            <label className="block mb-1">Foto del Vehículo</label>
+            <label className="block mb-1">Foto del Vehículo (Opcional)</label>
             <input
               type="file"
               name="carro"
               onChange={handleFileChange}
-              required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
               accept="image/*"
             />
           </div>
           {/* Campo Foto del SOAT */}
           <div className="mb-4">
-            <label className="block mb-1">Foto del SOAT</label>
+            <label className="block mb-1">Foto del SOAT (Opcional)</label>
             <input
               type="file"
               name="soat"
               onChange={handleFileChange}
-              required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
               accept="image/*"
             />
