@@ -85,9 +85,6 @@ const ReserveTrip = () => {
         <div className="bg-black bg-opacity-75 p-8 rounded-lg shadow-lg max-w-md mx-auto">
           <div className="mb-4">
             <p className="text-lg">
-              <strong className="text-green-500">Conductor:</strong> {trip.driverName}
-            </p>
-            <p className="text-lg">
               <strong className="text-green-500">Ruta:</strong> {trip.route}
             </p>
             <p className="text-lg">
