@@ -64,7 +64,7 @@ const VehicleProfile = () => {
         No se encontró información del vehículo. Por favor, regístralo.
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
-          onClick={() => navigate('/edit-vehicle')}
+          onClick={() => navigate('/add-vehicle')}
         >
           Registrar Vehículo
         </button>
