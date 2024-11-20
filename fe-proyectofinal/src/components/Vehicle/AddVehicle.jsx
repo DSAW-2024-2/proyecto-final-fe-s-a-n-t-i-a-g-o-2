@@ -1,11 +1,11 @@
-// src/components/AddVehicle.jsx
-
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import Header from '../Header';
 import Footer from '../Footer';
+import fondo from '../../assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg'; // Ruta relativa del fondo
+import logo from '../../assets/Deskpinchados-8-10-2024.png'; // Ruta relativa del logo
 
 const AddVehicle = () => {
   const { user } = useContext(AuthContext);
@@ -49,8 +49,7 @@ const AddVehicle = () => {
     data.append('marca', formData.marca);
     data.append('modelo', formData.modelo);
     data.append('capacidad', formData.capacidad);
-    
-    // Solo agregar las imágenes si están presentes
+
     if (formData.carro) {
       data.append('carro', formData.carro);
     }
@@ -61,13 +60,11 @@ const AddVehicle = () => {
     try {
       const response = await axios.post('/api/cars/add', data, {
         headers: {
-          // Eliminar 'Content-Type' para que axios lo maneje automáticamente
-          Authorization: `Bearer ${user.token}`, // Token de autenticación
+          Authorization: `Bearer ${user.token}`,
         },
       });
 
       setMensaje('Vehículo registrado exitosamente.');
-      // Resetear el formulario
       setFormData({
         placa: '',
         marca: '',
@@ -76,7 +73,6 @@ const AddVehicle = () => {
         carro: null,
         soat: null,
       });
-      // Redirigir al menú principal después de un breve retraso
       setTimeout(() => {
         navigate('/main-menu');
       }, 2000);
@@ -93,102 +89,117 @@ const AddVehicle = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundImage: `url(${fondo})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
-      <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Registrar Vehículo</h2>
+      <div className="container mx-auto p-6 flex-grow text-white">
+        {/* Logo y título */}
+        <div className="flex justify-center mb-6">
+          <img src={logo} alt="Deskpinchados" className="w-40" />
+        </div>
+        <h2 className="text-3xl font-bold text-green-500 text-center mb-6">
+          Registrar Vehículo
+        </h2>
         {mensaje && (
-          <div className={`mb-4 p-4 rounded ${mensaje.startsWith('Error') ? 'bg-red-600' : 'bg-green-600'}`}>
+          <div
+            className={`mb-4 p-4 rounded text-center ${
+              mensaje.startsWith('Error') ? 'bg-red-600' : 'bg-green-600'
+            }`}
+          >
             {mensaje}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md" encType="multipart/form-data">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-black bg-opacity-75 p-8 rounded-lg shadow-lg max-w-lg mx-auto"
+          encType="multipart/form-data"
+        >
           {/* Campo Placa */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="placa">Placa del Vehículo</label>
+            <label className="block text-green-500 mb-2">Placa del Vehículo</label>
             <input
               type="text"
-              id="placa"
               name="placa"
               value={formData.placa}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               placeholder="Ingresa la placa de tu vehículo"
             />
           </div>
           {/* Campo Marca */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="marca">Marca</label>
+            <label className="block text-green-500 mb-2">Marca</label>
             <input
               type="text"
-              id="marca"
               name="marca"
               value={formData.marca}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               placeholder="Ingresa la marca de tu vehículo"
             />
           </div>
           {/* Campo Modelo */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="modelo">Modelo</label>
+            <label className="block text-green-500 mb-2">Modelo</label>
             <input
               type="text"
-              id="modelo"
               name="modelo"
               value={formData.modelo}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               placeholder="Ingresa el modelo de tu vehículo"
             />
           </div>
           {/* Campo Capacidad */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="capacidad">Capacidad del Vehículo</label>
+            <label className="block text-green-500 mb-2">Capacidad del Vehículo</label>
             <input
               type="number"
-              id="capacidad"
               name="capacidad"
               value={formData.capacidad}
               onChange={handleInputChange}
               required
               min="1"
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               placeholder="Ingresa la capacidad de tu vehículo"
             />
           </div>
           {/* Campo Foto del Vehículo */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="carro">Foto del Vehículo (Opcional)</label>
+            <label className="block text-green-500 mb-2">Foto del Vehículo (Opcional)</label>
             <input
               type="file"
-              id="carro"
               name="carro"
               onChange={handleFileChange}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               accept="image/*"
             />
           </div>
           {/* Campo Foto del SOAT */}
           <div className="mb-4">
-            <label className="block mb-1" htmlFor="soat">Foto del SOAT (Opcional)</label>
+            <label className="block text-green-500 mb-2">Foto del SOAT (Opcional)</label>
             <input
               type="file"
-              id="soat"
               name="soat"
               onChange={handleFileChange}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               accept="image/*"
             />
           </div>
 
-          <div className="flex mt-6">
+          <div className="flex justify-between mt-6">
             <button
               type="submit"
-              className={`bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4 ${
+              className={`bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 ${
                 isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={isSubmitting}
@@ -197,7 +208,7 @@ const AddVehicle = () => {
             </button>
             <button
               type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700"
               onClick={() => navigate('/main-menu')}
             >
               Volver al Menú Principal
