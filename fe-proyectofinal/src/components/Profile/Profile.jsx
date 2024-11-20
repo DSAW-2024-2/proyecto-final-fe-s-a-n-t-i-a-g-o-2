@@ -1,5 +1,5 @@
 // src/components/Profile/Profile.jsx
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Header from '../Header';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import api from '../../services/api';
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [car, setCar] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -26,19 +25,8 @@ const Profile = () => {
       }
     };
 
-    const fetchCarData = async () => {
-      try {
-        const response = await api.get(`/cars/${user._id}`);
-        setCar(response.data.car);
-      } catch (error) {
-        console.error('Error al obtener el vehículo:', error);
-        // Si el usuario no tiene vehículo, no hacemos nada
-      }
-    };
-
     if (user) {
       fetchUserData();
-      fetchCarData();
     }
   }, [user, setUser, navigate]);
 
