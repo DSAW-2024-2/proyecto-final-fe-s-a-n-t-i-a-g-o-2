@@ -1,10 +1,13 @@
-// src/components/Footer.jsx
 import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-4 text-center">
-      <p>© {new Date().getFullYear()} Deskpinchados. Todos los derechos reservados.</p>
+    <footer
+      className="bg-black bg-opacity-90 text-gray-400 p-4 text-center shadow-inner"
+    >
+      <p>
+        © {new Date().getFullYear()} <span className="text-green-500">Deskpinchados</span>. Todos los derechos reservados.
+      </p>
     </footer>
   );
 };
