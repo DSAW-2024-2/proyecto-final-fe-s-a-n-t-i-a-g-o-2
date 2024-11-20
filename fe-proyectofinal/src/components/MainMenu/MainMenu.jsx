@@ -5,6 +5,8 @@ import Footer from '../Footer';
 import TripCard from './TripCard';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import logo from '../../assets/Deskpinchados-8-10-2024.png'; // Ruta relativa del logo
+import fondo from '../../assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg'; // Ruta relativa del fondo
 
 const MainMenu = () => {
   const { user } = useContext(AuthContext);
@@ -54,22 +56,23 @@ const MainMenu = () => {
     <div
       className="flex flex-col min-h-screen"
       style={{
-        backgroundImage: `url(/assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg)`,
+        backgroundImage: `url(${fondo})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
       <Header />
       <div className="container mx-auto p-6 flex-grow text-white">
-        {/* Mensaje de bienvenida */}
-        <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-green-500">
+        {/* Logo y bienvenida */}
+        <div className="flex flex-col items-center mb-6">
+          <img src={logo} alt="Deskpinchados" className="w-64 mb-4" />
+          <h2 className="text-3xl font-bold text-green-500 text-center">
             Bienvenido, {user.name}!
           </h2>
         </div>
 
         {/* Botones de navegación */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <button
             className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
             onClick={() => navigate('/new-trip')}
@@ -81,12 +84,6 @@ const MainMenu = () => {
             onClick={() => navigate('/add-vehicle')}
           >
             Registrar Vehículo
-          </button>
-          <button
-            className="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-800"
-            onClick={() => navigate('/my-trips')}
-          >
-            Mis Viajes
           </button>
         </div>
 
@@ -120,9 +117,9 @@ const MainMenu = () => {
         </div>
 
         {/* Lista de viajes disponibles */}
-        <h2 className="text-2xl font-bold mb-6 text-center text-green-500">
+        <h3 className="text-2xl font-bold mb-6 text-center text-green-500">
           Viajes Disponibles
-        </h2>
+        </h3>
         {isLoading ? (
           <div className="text-center">Cargando viajes...</div>
         ) : trips.length > 0 ? (
