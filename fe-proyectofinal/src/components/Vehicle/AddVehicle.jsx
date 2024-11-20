@@ -1,11 +1,9 @@
-// src/components/Vehicle/AddVehicle.jsx
 import React, { useState, useContext } from 'react';
-import api from '../../services/api';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import Header from '../Header';
 import Footer from '../Footer';
-
 
 const AddVehicle = () => {
   const { user } = useContext(AuthContext);
@@ -16,25 +14,49 @@ const AddVehicle = () => {
     marca: '',
     modelo: '',
     capacidad: '',
-    soat: '',
-    carro: '',
+    carro: null, // Archivo para la foto del vehículo
+    soat: null, // Archivo para la foto del SOAT
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    // Si el campo es 'capacidad', convertir a número
-    if (name === 'capacidad') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    // Validar usuario autenticado
+    if (!user || !user.token) {
+      alert('Usuario no autenticado.');
+      return;
+    }
+
+    // Crear un FormData para enviar datos y archivos
+    const data = new FormData();
+    data.append('placa', formData.placa);
+    data.append('marca', formData.marca);
+    data.append('modelo', formData.modelo);
+    data.append('capacidad', formData.capacidad);
+    data.append('carro', formData.carro);
+    data.append('soat', formData.soat);
+
     try {
-      const response = await api.post('/cars/add', formData);
+      const response = await axios.post('/api/cars/add', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${user.token}`, // Enviar token del usuario para autenticación
+        },
+      });
+
       alert('Vehículo registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
@@ -44,6 +66,8 @@ const AddVehicle = () => {
       } else {
         alert('Error al registrar el vehículo.');
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -52,8 +76,8 @@ const AddVehicle = () => {
       <Header />
       <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6">Registrar Vehículo</h2>
-        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
-          {/* Formulario para ingresar los datos del vehículo */}
+        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md" encType="multipart/form-data">
+          {/* Campo Placa */}
           <div className="mb-4">
             <label className="block mb-1">Placa del Vehículo</label>
             <input
@@ -66,7 +90,7 @@ const AddVehicle = () => {
               placeholder="Ingresa la placa de tu vehículo"
             />
           </div>
-          {/* Resto de los campos del formulario */}
+          {/* Campo Marca */}
           <div className="mb-4">
             <label className="block mb-1">Marca</label>
             <input
@@ -79,6 +103,7 @@ const AddVehicle = () => {
               placeholder="Ingresa la marca de tu vehículo"
             />
           </div>
+          {/* Campo Modelo */}
           <div className="mb-4">
             <label className="block mb-1">Modelo</label>
             <input
@@ -91,6 +116,7 @@ const AddVehicle = () => {
               placeholder="Ingresa el modelo de tu vehículo"
             />
           </div>
+          {/* Campo Capacidad */}
           <div className="mb-4">
             <label className="block mb-1">Capacidad del Vehículo</label>
             <input
@@ -104,35 +130,40 @@ const AddVehicle = () => {
               placeholder="Ingresa la capacidad de tu vehículo"
             />
           </div>
+          {/* Campo Foto del Vehículo */}
           <div className="mb-4">
-            <label className="block mb-1">Foto del SOAT (URL)</label>
+            <label className="block mb-1">Foto del Vehículo</label>
             <input
-              type="text"
-              name="soat"
-              value={formData.soat}
-              onChange={handleInputChange}
+              type="file"
+              name="carro"
+              onChange={handleFileChange}
+              required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ingresa la URL de la foto del SOAT"
+              accept="image/*"
             />
           </div>
+          {/* Campo Foto del SOAT */}
           <div className="mb-4">
-            <label className="block mb-1">Tipo de Vehículo</label>
+            <label className="block mb-1">Foto del SOAT</label>
             <input
-              type="text"
-              name="carro"
-              value={formData.carro}
-              onChange={handleInputChange}
+              type="file"
+              name="soat"
+              onChange={handleFileChange}
+              required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
-              placeholder="Ejemplo: Sedán, SUV, etc."
+              accept="image/*"
             />
           </div>
 
           <div className="flex mt-6">
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4"
+              className={`bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4 ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={isSubmitting}
             >
-              Registrar Vehículo
+              {isSubmitting ? 'Registrando...' : 'Registrar Vehículo'}
             </button>
             <button
               type="button"
