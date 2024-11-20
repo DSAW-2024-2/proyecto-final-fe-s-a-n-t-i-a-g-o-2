@@ -59,7 +59,7 @@ const AddVehicle = () => {
     }
 
     try {
-      const response = await axios.post('/api/cars/add', data, {
+      await axios.post('/api/vehicles/add', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${user.token}`, // Token de autenticación
