@@ -1,8 +1,6 @@
-// src/components/Auth/Register.jsx
 import React, { useState } from 'react';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
-
 
 const Register = () => {
   const navigate = useNavigate();
@@ -13,7 +11,7 @@ const Register = () => {
     email: '',
     contact: '',
     password: '',
-    photo: '',
+    photo: null, // Cambiado a null para manejar un archivo
   });
 
   const handleInputChange = (e) => {
@@ -21,10 +19,28 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] }); // Guardamos el archivo
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Usamos FormData para incluir el archivo
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('lastname', formData.lastname);
+    data.append('iduni', formData.iduni);
+    data.append('email', formData.email);
+    data.append('contact', formData.contact);
+    data.append('password', formData.password);
+    data.append('photo', formData.photo);
+
     try {
-      await api.post('/users/register', formData);
+      await api.post('/users/register', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       alert('Registro exitoso. Ahora puedes iniciar sesión.');
       navigate('/login');
     } catch (error) {
@@ -42,7 +58,6 @@ const Register = () => {
       <div className="w-full max-w-lg bg-white p-8 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Registro de Pasajero</h2>
         <form onSubmit={handleSubmit}>
-          {/* Campos requeridos por el backend */}
           <div className="mb-4">
             <label className="block text-gray-700">Nombre</label>
             <input
@@ -115,19 +130,17 @@ const Register = () => {
               placeholder="Ingresa tu contraseña"
             />
           </div>
-          {/* Campo 'photo' */}
           <div className="mb-4">
-            <label className="block text-gray-700">Foto de Perfil (URL)</label>
+            <label className="block text-gray-700">Foto de Perfil</label>
             <input
-              type="text"
+              type="file"
               name="photo"
-              value={formData.photo}
-              onChange={handleInputChange}
+              onChange={handleFileChange}
+              required
               className="w-full p-2 border rounded"
-              placeholder="Ingresa la URL de tu foto de perfil"
+              accept="image/*"
             />
           </div>
-
           <div className="flex mt-6">
             <button
               type="submit"
