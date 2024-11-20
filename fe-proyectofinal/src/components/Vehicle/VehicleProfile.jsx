@@ -21,13 +21,13 @@ const VehicleProfile = () => {
 
         let carid = user.carid;
 
-        if (!carid) {
+        /*if (!carid) {
           // Obtener la información actualizada del usuario
           const userResponse = await api.get(`/users/${user.uid}`);
           const updatedUser = { ...userResponse.data.user, token: user.token };
           setUser(updatedUser);
           carid = updatedUser.carid;
-        }
+        }*/
 
         if (!carid) {
           console.error('El usuario no tiene un carid asignado.', error);
