@@ -7,7 +7,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 const ReserveTrip = () => {
-  const { tripID } = useParams();
+  const { driverUID, departure } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [trip, setTrip] = useState(null);
@@ -17,7 +17,7 @@ const ReserveTrip = () => {
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const response = await api.get(`/trips/${tripID}`);
+        const response = await api.get(`/trips/${driverUID}/${encodeURIComponent(departure)}`);
         setTrip(response.data.trip);
       } catch (error) {
         console.error('Error al obtener el viaje:', error);
@@ -27,12 +27,13 @@ const ReserveTrip = () => {
     };
 
     fetchTrip();
-  }, [tripID, navigate]);
+  }, [driverUID, departure, navigate]);
 
   const handleReserve = async () => {
     try {
       const data = {
-        tripID,
+        driverUID,
+        departure,
         seatsReserved,
         pickupPoint,
       };
