@@ -1,10 +1,11 @@
-// src/components/Profile/EditProfile.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import logo from '../../assets/Deskpinchados-8-10-2024.png'; // Ruta relativa del logo
+import fondo from '../../assets/WhatsApp Image 2024-10-24 at 22.52.36_36367a8d.jpg'; // Ruta relativa del fondo
 
 const EditProfile = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const EditProfile = () => {
       setFormData({
         name: user.name || '',
         lastname: user.lastname || '',
-        email: user.email || '', // Mantener el email para mostrarlo
+        email: user.email || '',
         contact: user.contact || '',
         iduni: user.iduni || '',
         photo: user.photo || '',
@@ -40,7 +41,7 @@ const EditProfile = () => {
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
-    setFormData({ ...formData, [name]: files[0] }); // Guardar el archivo seleccionado
+    setFormData({ ...formData, [name]: files[0] });
   };
 
   const handleSubmit = async (e) => {
@@ -53,7 +54,7 @@ const EditProfile = () => {
     data.append('iduni', formData.iduni);
 
     if (formData.photo) {
-      data.append('photo', formData.photo); // Agregar la foto solo si fue seleccionada
+      data.append('photo', formData.photo);
     }
 
     try {
@@ -68,7 +69,6 @@ const EditProfile = () => {
       });
 
       alert('Perfil actualizado exitosamente.');
-      // Actualizar el contexto del usuario
       setUser({ ...user, ...response.data });
       navigate('/profile');
     } catch (error) {
@@ -82,92 +82,108 @@ const EditProfile = () => {
   };
 
   if (!user) {
-    return <div className="text-center mt-10">Cargando...</div>;
+    return <div className="text-center mt-10 text-white">Cargando...</div>;
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col">
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundImage: `url(${fondo})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <Header />
-      <div className="container mx-auto p-6 flex-grow">
-        <h2 className="text-2xl font-bold mb-6">Editar Perfil</h2>
-        <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
+      <div className="container mx-auto p-6 flex-grow text-white">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img src={logo} alt="Deskpinchados" className="w-40" />
+        </div>
+        <h2 className="text-3xl font-bold text-green-500 text-center mb-6">
+          Actualizar Perfil
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-black bg-opacity-75 p-8 rounded-lg shadow-lg max-w-lg mx-auto"
+        >
           <div className="mb-4">
-            <label className="block mb-1">Nombre</label>
+            <label className="block text-green-500 mb-2">Nombre</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Apellido</label>
+            <label className="block text-green-500 mb-2">Apellido</label>
             <input
               type="text"
               name="lastname"
               value={formData.lastname}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Correo Electrónico</label>
+            <label className="block text-green-500 mb-2">Correo Corporativo</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               disabled
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-400 cursor-not-allowed"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-gray-400 cursor-not-allowed"
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Número de Contacto</label>
+            <label className="block text-green-500 mb-2">Número de Contacto</label>
             <input
               type="text"
               name="contact"
               value={formData.contact}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">ID Universidad</label>
+            <label className="block text-green-500 mb-2">ID Universidad</label>
             <input
               type="text"
               name="iduni"
               value={formData.iduni}
               onChange={handleInputChange}
               required
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
             />
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Foto de Perfil</label>
+            <label className="block text-green-500 mb-2">Foto (Opcional)</label>
             <input
               type="file"
               name="photo"
               onChange={handleFileChange}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              className="w-full p-3 rounded bg-gray-800 border border-gray-600 text-white"
               accept="image/*"
             />
           </div>
-          <div className="flex mt-6">
-            <button
-              type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4"
-            >
-              Guardar Cambios
-            </button>
+          <div className="flex justify-between mt-6">
             <button
               type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-gray-600 text-white px-6 py-3 rounded hover:bg-gray-700"
               onClick={() => navigate('/profile')}
             >
-              Cancelar
+              Volver
+            </button>
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700"
+            >
+              Actualizar
             </button>
           </div>
         </form>
