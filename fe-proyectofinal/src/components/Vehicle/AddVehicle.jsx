@@ -37,6 +37,7 @@ const AddVehicle = () => {
     // Validar usuario autenticado
     if (!user || !user.token) {
       alert('Usuario no autenticado.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -57,7 +58,16 @@ const AddVehicle = () => {
         },
       });
 
-      alert('Vehículo registrado exitosamente.');
+      // Supongamos que el servidor devuelve un objeto con el ID del vehículo y otros detalles
+      const { id, message, vehicleDetails } = response.data;
+
+      // Mostrar un mensaje de éxito personalizado
+      alert(`${message} ID del Vehículo: ${id}`);
+
+      // Opcional: Guardar detalles del vehículo en el estado o contexto si es necesario
+      // Por ejemplo: actualizar una lista de vehículos en un contexto global
+
+      // Navegar al menú principal o a una página de detalles del vehículo
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
