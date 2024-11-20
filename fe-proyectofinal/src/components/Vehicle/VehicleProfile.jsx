@@ -30,13 +30,13 @@ const VehicleProfile = () => {
         }
 
         if (!carid) {
-          console.error('El usuario no tiene un carid asignado.');
+          console.error('El usuario no tiene un carid asignado.', error);
           setIsLoading(false);
           return;
         }
 
         // Obtener la información del vehículo utilizando el carid
-        const response = await api.get(`/cars/${carid}`);
+        const response = await api.get(`/cars/${car.carid}`);
         setCar(response.data.vehicle);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
