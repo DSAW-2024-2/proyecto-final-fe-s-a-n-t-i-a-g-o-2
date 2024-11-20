@@ -20,7 +20,7 @@ const EditVehicle = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [vehicleuid, setVehicleuid] = useState('');
+  const [carid, setCarid] = useState('');
 
   useEffect(() => {
     const fetchVehicleData = async () => {
@@ -29,19 +29,19 @@ const EditVehicle = () => {
           throw new Error('Usuario no autenticado o token no disponible.');
         }
 
-        let currentVehicleuid = user.vehicleuid;
+        let currentCarid = user.carid;
 
-        if (!currentVehicleuid) {
+        if (!currentCarid) {
           // Obtener la información actualizada del usuario
           const userResponse = await api.get(`/users/${user.uid}`);
           const updatedUser = { ...userResponse.data.user, token: user.token };
           setUser(updatedUser);
-          currentVehicleuid = updatedUser.vehicleuid;
+          currentCarid = updatedUser.carid;
         }
 
-        if (currentVehicleuid) {
+        if (currentCarid) {
           // Obtener la información del vehículo
-          const response = await api.get(`/cars/${currentVehicleuid}`);
+          const response = await api.get(`/cars/${currentCarid}`);
           setFormData({
             placa: response.data.vehicle.placa || '',
             marca: response.data.vehicle.marca || '',
@@ -51,7 +51,7 @@ const EditVehicle = () => {
             soat: response.data.vehicle.soat || '',
           });
           setIsEditing(true);
-          setVehicleuid(currentVehicleuid);
+          setCarid(currentCarid);
         } else {
           setIsEditing(false);
         }
@@ -61,7 +61,6 @@ const EditVehicle = () => {
           alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
           navigate('/login');
         } else {
-          // Si el usuario no tiene vehículo, estamos registrando uno nuevo
           setIsEditing(false);
         }
       }
@@ -83,15 +82,15 @@ const EditVehicle = () => {
     try {
       if (isEditing) {
         // Actualizar vehículo existente
-        await api.put(`/cars/${vehicleuid}`, formData);
+        await api.put(`/cars/${carid}`, formData);
         alert('Vehículo actualizado exitosamente.');
       } else {
         // Registrar nuevo vehículo
         const response = await api.post('/cars/add', { ...formData, uid: user.uid });
-        const newVehicleuid = response.data.vehicleuid;
+        const newCarid = response.data.carid;
 
-        // Actualizar el usuario con el nuevo vehicleuid
-        const updatedUser = { ...user, vehicleuid: newVehicleuid };
+        // Actualizar el usuario con el nuevo carid
+        const updatedUser = { ...user, carid: newCarid };
         setUser(updatedUser);
 
         alert('Vehículo registrado exitosamente.');

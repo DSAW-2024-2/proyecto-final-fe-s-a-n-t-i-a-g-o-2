@@ -10,35 +10,33 @@ const VehicleProfile = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Estado para manejar la carga
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        // Verificar que el usuario esté autenticado y tenga un token
         if (!user || !user.token) {
           throw new Error('Usuario no autenticado o token no disponible.');
         }
 
-        // Si el vehicleuid no está en el usuario, obtenerlo desde el backend
-        let vehicleuid = user.vehicleuid;
+        let carid = user.carid;
 
-        if (!vehicleuid) {
+        if (!carid) {
           // Obtener la información actualizada del usuario
           const userResponse = await api.get(`/users/${user.uid}`);
-          const updatedUser = { ...userResponse.data.user, token: user.token }; // Mantener el token
+          const updatedUser = { ...userResponse.data.user, token: user.token };
           setUser(updatedUser);
-          vehicleuid = updatedUser.vehicleuid;
+          carid = updatedUser.carid;
         }
 
-        if (!vehicleuid) {
-          console.error('El usuario no tiene un vehicleuid asignado.');
+        if (!carid) {
+          console.error('El usuario no tiene un carid asignado.');
           setIsLoading(false);
           return;
         }
 
-        // Obtener la información del vehículo utilizando el vehicleuid
-        const response = await api.get(`/cars/${vehicleuid}`);
+        // Obtener la información del vehículo utilizando el carid
+        const response = await api.get(`/cars/${carid}`);
         setCar(response.data.vehicle);
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
@@ -71,7 +69,7 @@ const VehicleProfile = () => {
   if (!car) {
     return (
       <div className="text-center mt-10">
-        No se encontró información del vehículo. Por favor, regístrelo.
+        No se encontró información del vehículo. Por favor, regístralo.
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
           onClick={() => navigate('/edit-vehicle')}
