@@ -34,15 +34,28 @@ const EditProfile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Si el campo es 'email', no hacemos nada ya que está deshabilitado
-    if (name === 'email') return;
-
+    if (name === 'email') return; // No permitir cambios en el email
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] }); // Guardar el archivo seleccionado
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('lastname', formData.lastname);
+    data.append('contact', formData.contact);
+    data.append('iduni', formData.iduni);
+
+    if (formData.photo) {
+      data.append('photo', formData.photo); // Agregar la foto solo si fue seleccionada
+    }
+
     try {
       const userId = user.uid;
 
@@ -50,16 +63,13 @@ const EditProfile = () => {
         throw new Error('ID de usuario no encontrado.');
       }
 
-      // Excluir el email del formData para no enviarlo al backend
-      const { email, ...dataToUpdate } = formData;
-
-      // Realizar la solicitud PUT al backend
-      const response = await api.put(`/users/${userId}`, dataToUpdate);
+      const response = await api.put(`/users/${userId}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
       alert('Perfil actualizado exitosamente.');
-
-      // Actualizar el contexto del usuario con los nuevos datos
-      setUser({ ...user, ...dataToUpdate });
+      // Actualizar el contexto del usuario
+      setUser({ ...user, ...response.data });
       navigate('/profile');
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
@@ -81,7 +91,6 @@ const EditProfile = () => {
       <div className="container mx-auto p-6 flex-grow">
         <h2 className="text-2xl font-bold mb-6">Editar Perfil</h2>
         <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-md">
-          {/* Campo Nombre */}
           <div className="mb-4">
             <label className="block mb-1">Nombre</label>
             <input
@@ -93,7 +102,6 @@ const EditProfile = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Campo Apellido */}
           <div className="mb-4">
             <label className="block mb-1">Apellido</label>
             <input
@@ -105,18 +113,16 @@ const EditProfile = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Campo Email (Deshabilitado) */}
           <div className="mb-4">
             <label className="block mb-1">Correo Electrónico</label>
             <input
               type="email"
               name="email"
               value={formData.email}
-              disabled // Campo deshabilitado
+              disabled
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-400 cursor-not-allowed"
             />
           </div>
-          {/* Campo Contacto */}
           <div className="mb-4">
             <label className="block mb-1">Número de Contacto</label>
             <input
@@ -128,7 +134,6 @@ const EditProfile = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Campo ID Universidad */}
           <div className="mb-4">
             <label className="block mb-1">ID Universidad</label>
             <input
@@ -140,15 +145,14 @@ const EditProfile = () => {
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
             />
           </div>
-          {/* Campo Foto */}
           <div className="mb-4">
-            <label className="block mb-1">URL de Foto de Perfil</label>
+            <label className="block mb-1">Foto de Perfil</label>
             <input
-              type="text"
+              type="file"
               name="photo"
-              value={formData.photo}
-              onChange={handleInputChange}
+              onChange={handleFileChange}
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"
+              accept="image/*"
             />
           </div>
           <div className="flex mt-6">
