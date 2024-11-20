@@ -34,14 +34,12 @@ const AddVehicle = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validar usuario autenticado
     if (!user || !user.token) {
       alert('Usuario no autenticado.');
       setIsSubmitting(false);
       return;
     }
 
-    // Crear un FormData para enviar datos y archivos
     const data = new FormData();
     data.append('placa', formData.placa);
     data.append('marca', formData.marca);
@@ -54,24 +52,15 @@ const AddVehicle = () => {
       const response = await axios.post('/api/cars/add', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${user.token}`, // Enviar token del usuario para autenticación
+          Authorization: `Bearer ${user.token}`, // Token de autenticación
         },
       });
 
-      // Supongamos que el servidor devuelve un objeto con el ID del vehículo y otros detalles
-      const { id, message, vehicleDetails } = response.data;
-
-      // Mostrar un mensaje de éxito personalizado
-      alert(`${message} ID del Vehículo: ${id}`);
-
-      // Opcional: Guardar detalles del vehículo en el estado o contexto si es necesario
-      // Por ejemplo: actualizar una lista de vehículos en un contexto global
-
-      // Navegar al menú principal o a una página de detalles del vehículo
+      alert('Vehículo registrado exitosamente.');
       navigate('/main-menu');
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (error.response && error.response.data.message) {
         alert(`Error: ${error.response.data.message}`);
       } else {
         alert('Error al registrar el vehículo.');
