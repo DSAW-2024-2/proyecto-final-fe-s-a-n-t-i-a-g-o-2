@@ -7,7 +7,7 @@ import Footer from '../Footer';
 import api from '../../services/api';
 
 const EditVehicle = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,41 +15,62 @@ const EditVehicle = () => {
     marca: '',
     modelo: '',
     capacidad: '',
-    carro: '',
+    tipo: '',
     soat: '',
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [vehicleuid, setVehicleuid] = useState('');
 
   useEffect(() => {
     const fetchVehicleData = async () => {
       try {
-        // Obtener la información del vehículo
-        const response = await api.get(`/cars/${vehicles._id}`);
-        setFormData({
-          placa: response.data.car.placa || '',
-          marca: response.data.car.marca || '',
-          modelo: response.data.car.modelo || '',
-          capacidad: response.data.car.capacidad || '',
-          carro: response.data.car.carro || '',
-          soat: response.data.car.soat || '',
-        });
-        setIsEditing(true);
+        if (!user || !user.token) {
+          throw new Error('Usuario no autenticado o token no disponible.');
+        }
+
+        let currentVehicleuid = user.vehicleuid;
+
+        if (!currentVehicleuid) {
+          // Obtener la información actualizada del usuario
+          const userResponse = await api.get(`/users/${user.uid}`);
+          const updatedUser = { ...userResponse.data.user, token: user.token };
+          setUser(updatedUser);
+          currentVehicleuid = updatedUser.vehicleuid;
+        }
+
+        if (currentVehicleuid) {
+          // Obtener la información del vehículo
+          const response = await api.get(`/cars/${currentVehicleuid}`);
+          setFormData({
+            placa: response.data.vehicle.placa || '',
+            marca: response.data.vehicle.marca || '',
+            modelo: response.data.vehicle.modelo || '',
+            capacidad: response.data.vehicle.capacidad || '',
+            tipo: response.data.vehicle.tipo || '',
+            soat: response.data.vehicle.soat || '',
+          });
+          setIsEditing(true);
+          setVehicleuid(currentVehicleuid);
+        } else {
+          setIsEditing(false);
+        }
       } catch (error) {
         console.error('Error al obtener el vehículo:', error);
         if (error.response && error.response.status === 401) {
           alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
           navigate('/login');
+        } else {
+          // Si el usuario no tiene vehículo, estamos registrando uno nuevo
+          setIsEditing(false);
         }
-        // Si el usuario no tiene vehículo, estamos registrando uno nuevo
-        setIsEditing(false);
       }
     };
 
     if (user) {
       fetchVehicleData();
     }
-  }, [user, navigate]);
+  }, [user, navigate, setUser]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,11 +83,17 @@ const EditVehicle = () => {
     try {
       if (isEditing) {
         // Actualizar vehículo existente
-        await api.put(`/cars/${vehicle._id}`, formData);
+        await api.put(`/cars/${vehicleuid}`, formData);
         alert('Vehículo actualizado exitosamente.');
       } else {
         // Registrar nuevo vehículo
-        await api.post('/cars/add', { ...formData, uid: vehicle._id });
+        const response = await api.post('/cars/add', { ...formData, uid: user.uid });
+        const newVehicleuid = response.data.vehicleuid;
+
+        // Actualizar el usuario con el nuevo vehicleuid
+        const updatedUser = { ...user, vehicleuid: newVehicleuid };
+        setUser(updatedUser);
+
         alert('Vehículo registrado exitosamente.');
       }
       navigate('/vehicle');
@@ -146,8 +173,8 @@ const EditVehicle = () => {
             <label className="block mb-1">Tipo de Vehículo</label>
             <input
               type="text"
-              name="carro"
-              value={formData.carro}
+              name="tipo"
+              value={formData.tipo}
               onChange={handleInputChange}
               required
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white"

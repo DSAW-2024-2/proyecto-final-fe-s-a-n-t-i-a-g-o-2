@@ -25,7 +25,7 @@ const VehicleProfile = () => {
 
         if (!vehicleuid) {
           // Obtener la información actualizada del usuario
-          const userResponse = await api.get(`/users/${user._id}`);
+          const userResponse = await api.get(`/users/${user.uid}`);
           const updatedUser = { ...userResponse.data.user, token: user.token }; // Mantener el token
           setUser(updatedUser);
           vehicleuid = updatedUser.vehicleuid;
@@ -101,7 +101,7 @@ const VehicleProfile = () => {
             <strong>Capacidad:</strong> {car.capacidad || 'No disponible'}
           </p>
           <p className="mb-2">
-            <strong>Tipo de Vehículo:</strong> {car.carro || 'No disponible'}
+            <strong>Tipo de Vehículo:</strong> {car.tipo || 'No disponible'}
           </p>
           {car.soat && (
             <div className="mb-2">
